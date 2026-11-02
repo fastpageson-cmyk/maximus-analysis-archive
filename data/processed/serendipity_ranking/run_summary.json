@@ -1,0 +1,26 @@
+{
+  "quarter": 20254,
+  "candidates": 786,
+  "config": {
+    "top_k": 10,
+    "r_floor": 0.6,
+    "w_resid": 0.3,
+    "w_novelty": 0.2,
+    "w_cat": 0.25,
+    "w_spatial": 0.25,
+    "w_access": 0.2,
+    "mmr_lambda": 0.7,
+    "spatial_scale_km": 1.5,
+    "ridge_alpha": 1.0,
+    "n_folds": 5,
+    "weights_note": "사전 지정값, 학습값 아님"
+  },
+  "eligible_per_purpose": {
+    "공부": 315,
+    "쇼핑": 315,
+    "식사": 315,
+    "여가문화": 315,
+    "카페": 315
+  },
+  "observed_inflow_source": "생활이동 2026-08 nonroutine×접근률(동대문구발 프록시)"
+}
