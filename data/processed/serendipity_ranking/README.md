@@ -16,3 +16,8 @@
 | `run_summary.json` | 설정값, 목적별 하한 통과 수 |
 
 주의: `observed_inflow`는 동대문구발 OD가 아니라 생활이동(2026-08) 모든 출발지 비일상 유입 × 동대문구 30분 도달률 프록시다. 생활이동 유입은 행정동 단위 배분값이다.
+
+## v1 (2026-11-02)
+
+- 공간 거리 가점 제거, 관성 Top-K 상권 제외, 이동시간 구간별 3곳(`serendipity_band_picks.csv`). 동대문구 출발 이동시간은 직선거리 회귀 근사.
+- `hufs_seoul/`: `python3 scripts/build_serendipity_ranking.py --origin hufs_seoul`. 한국외대 서울캠 출발 30분 안 274곳(ODsay 측정 60곳 + 직선 4km 안 추정 214곳). `hufs_seoul_band_picks.csv`가 구간별 추천.

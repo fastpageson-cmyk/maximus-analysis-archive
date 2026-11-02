@@ -1,0 +1,37 @@
+{
+  "origin": "한국외대 서울캠퍼스",
+  "origin_latlon": [
+    37.59754,
+    127.05785
+  ],
+  "quarter": 20254,
+  "candidates": 274,
+  "measured_travel_time": 60,
+  "band_sizes": {
+    "중간 거리": 180,
+    "가까운데 안 가 본 곳": 50,
+    "멀지만 의외로 괜찮은 곳": 44
+  },
+  "config": {
+    "top_k": 10,
+    "r_floor": 0.6,
+    "w_resid": 0.45,
+    "w_novelty": 0.2,
+    "w_cat": 0.35,
+    "w_spatial": 0.0,
+    "exclude_inertia": true,
+    "band_edges": [
+      15.0,
+      22.0,
+      30.0
+    ],
+    "band_quota": 3,
+    "w_access": 0.2,
+    "mmr_lambda": 0.7,
+    "spatial_scale_km": 1.5,
+    "ridge_alpha": 1.0,
+    "n_folds": 5,
+    "weights_note": "사전 지정값, 학습값 아님"
+  },
+  "observed_inflow_source": "생활이동 2026-08 nonroutine 유입(모든 출발지, 서울캠발 아님)"
+}

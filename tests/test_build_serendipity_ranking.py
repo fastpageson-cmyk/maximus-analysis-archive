@@ -40,6 +40,7 @@ def synthetic_inputs(n: int = 120, seed: int = 7):
         "share_공부": rng.uniform(0, .02, n),
         "lagged_total_sales": stores * rng.lognormal(16, .5, n),
     })
+    area["travel_min"] = (MODULE.TRAVEL_SLOPE * area["dist_km"] + MODULE.TRAVEL_INTERCEPT).clip(upper=30)
     area["observed_inflow"] = stores * rng.lognormal(4, .6, n) * area["mean_period_ratio"]
     area["log_observed"] = np.log1p(area["observed_inflow"])
     rows = []
@@ -178,3 +179,28 @@ def test_mmr_returns_unique_eligible_items(built):
 def test_gini_bounds():
     assert MODULE.gini([1, 1, 1, 1]) == pytest.approx(0.0)
     assert MODULE.gini([0, 0, 0, 10]) == pytest.approx(0.75)
+
+
+# --- v1 관성 재설계: 관성 상권 제외, 이동시간 구간별 추천 --------------------
+
+def test_inertia_members_never_recommended(built):
+    _, full, _ = built
+    assert not full.loc[full["in_inertia_topk"], "eligible"].any()
+    assert full.loc[full["mmr_rank"].notna(), "in_inertia_topk"].eq(False).all()
+    assert full.loc[full["band_rank"].notna(), "in_inertia_topk"].eq(False).all()
+
+
+def test_spatial_term_off_by_default():
+    assert MODULE.Config().w_spatial == 0.0
+
+
+def test_band_picks_respect_quota_and_band(built):
+    cfg, full, _ = built
+    picks = full[full["band_rank"].notna()]
+    assert len(picks) > 0
+    assert picks.groupby(["purpose", "band"]).size().le(cfg.band_quota).all()
+    edges = [-np.inf, *cfg.band_edges]
+    for i, label in enumerate(MODULE.BAND_LABELS):
+        sel = picks[picks["band"] == label]["travel_min"]
+        assert ((sel > edges[i]) & (sel <= edges[i + 1])).all()
+    assert (picks["relevance"] >= cfg.r_floor).all()

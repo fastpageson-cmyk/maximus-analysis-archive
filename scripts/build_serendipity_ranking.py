@@ -14,6 +14,11 @@
   (이태원·동대문패션타운 관광특구)이 잔차만으로는 '덜 알려짐'으로 잘못 잡혔기 때문이다.
 - 점수 S = R × U. R 하한 미만은 제외한다. 마지막으로 MMR로 다양성 재정렬한다.
 
+v1 관성 재설계(2026-11-02): '관성에서 멀수록 가점'인 공간 거리 항을 기본값에서 뺐다. 가까운데
+안 가 본 곳이 감점되는 문제가 있었기 때문이다. 대신 관성 Top-K에 든 상권 자체만 제외하고,
+이동시간 구간(≤15분 / 15~22분 / 22~30분)마다 따로 뽑는다(`band_picks`). '가까운데 안 가 본 곳'과
+'멀지만 의외로 괜찮은 곳'이 함께 나오게 하려는 것이다.
+
 복잡 모형은 쓰지 않는다(교수님 2026-09-09 피드백). 회귀는 numpy 닫힌 해 Ridge다.
 저장소 안 공개 가공 데이터만 읽고 API를 부르지 않는다.
 
@@ -35,16 +40,21 @@ import pandas as pd
 PURPOSES = ["식사", "카페", "쇼핑", "여가문화", "공부"]
 AREA_TYPES = ["골목상권", "발달상권", "전통시장", "관광특구"]
 BASELINES = ["distance", "popularity", "past_inflow"]
+HUFS_SEOUL = (37.59754, 127.05785)   # 한국외대 서울캠퍼스(캠퍼스 스크립트와 같은 좌표)
+TRAVEL_SLOPE, TRAVEL_INTERCEPT = 3.31, 8.8
 
 
 @dataclass
 class Config:
     top_k: int = 10                 # 관성 Top-K, 추천 Top-K
     r_floor: float = 0.6            # 목적 안 R 백분위 하한
-    w_resid: float = 0.3            # U 가중치: 저유입 잔차
+    w_resid: float = 0.45           # U 가중치: 저유입 잔차
     w_novelty: float = 0.2          # U 가중치: 도시 전체 비인기(Kotkov novelty)
-    w_cat: float = 0.25             # U 가중치: 범주 거리
-    w_spatial: float = 0.25         # U 가중치: 공간 거리
+    w_cat: float = 0.35             # U 가중치: 범주 거리
+    w_spatial: float = 0.0          # U 가중치: 공간 거리(v1에서 제거, 민감도 비교용으로만 남김)
+    exclude_inertia: bool = True    # 관성 Top-K에 든 상권 자체는 추천에서 제외
+    band_edges: tuple = (15.0, 22.0, 30.0)  # 이동시간 구간 경계(분)
+    band_quota: int = 3             # 구간별 추천 수
     w_access: float = 0.2           # R 안 접근성 가중치(Huff 저항항)
     mmr_lambda: float = 0.7         # MMR 관련성-다양성 균형
     spatial_scale_km: float = 1.5   # 공간 유사도 감쇠 거리
@@ -174,6 +184,9 @@ def load_inputs(root: Path, quarter: int, use_movement: bool = True) -> tuple[pd
     dd = area[area["primary_district_name"] == "동대문구"]
     ref_lat, ref_lon = dd["lat"].mean(), dd["lon"].mean()
     area["dist_km"] = haversine_km(ref_lat, ref_lon, area["lat"], area["lon"])
+    # 동대문구 출발 이동시간 근사: 서울캠 ODsay 측정 60곳의 직선거리 회귀(분 = 3.31 × km + 8.8)를 빌려 씀
+    area["travel_min"] = (TRAVEL_SLOPE * area["dist_km"] + TRAVEL_INTERCEPT).clip(upper=30)
+    area["travel_min_source"] = "직선거리 회귀 근사"
     area["log_store_total"] = np.log1p(area["store_count"].fillna(0))
     area["log_area_m2"] = np.log(area["area_m2"].clip(lower=1))
     area["industry_entropy"] = area["industry_entropy"].fillna(area["industry_entropy"].median())
@@ -199,6 +212,32 @@ def load_inputs(root: Path, quarter: int, use_movement: bool = True) -> tuple[pd
     else:
         purpose["lagged_purpose_sales"] = np.nan
     return area, purpose
+
+
+def load_hufs_inputs(root: Path, quarter: int) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """한국외대 서울캠 출발. 후보 = 서울캠 30분 안 상권(측정 60 + 직선 4km 안 추정).
+
+    - 이동시간: ODsay 측정값, 없으면 측정분으로 맞춘 직선거리 회귀값.
+    - 접근성(mean_period_ratio 자리): 1 - 0.9 × 이동시간/30 (R의 접근 성분과 구조 변수에 쓰임).
+    - 관측 유입: 모든 출발지 비일상 유입(서울캠발 OD 없음).
+    """
+    area, purpose = load_inputs(root, quarter, use_movement=True)
+    reach = pd.read_csv(root / "data/processed/campus_seoulcampus/seoulcampus_areas_reach_v1.csv",
+                        dtype={"area_code": str})
+    area = area.drop(columns=["travel_min", "travel_min_source"]).merge(
+        reach[["area_code", "straight_km", "reach_min", "reach_status", "wait_risk"]], on="area_code", how="inner")
+    area["dist_km"] = area["straight_km"]
+    meas = area.dropna(subset=["reach_min"])
+    slope, icpt = np.polyfit(meas["straight_km"], meas["reach_min"], 1) if len(meas) >= 5 else (TRAVEL_SLOPE, TRAVEL_INTERCEPT)
+    est = pd.Series(slope * area["straight_km"] + icpt, index=area.index)
+    area["travel_min"] = area["reach_min"].fillna(est).clip(0, 30)
+    area["travel_min_source"] = np.where(area["reach_min"].notna(), "ODsay 측정(대기 미포함)", "직선거리 회귀 추정")
+    area["mean_period_ratio"] = 1 - 0.9 * area["travel_min"] / 30
+    area["observed_inflow"] = area["inflow_nonroutine"]
+    area["log_observed"] = np.log1p(area["observed_inflow"].fillna(0))
+    area["observed_source"] = "생활이동 2026-08 nonroutine 유입(모든 출발지, 서울캠발 아님)"
+    purpose = purpose[purpose["area_code"].isin(area["area_code"])]
+    return area.reset_index(drop=True), purpose
 
 
 # ---------------------------------------------------------------------------
@@ -331,11 +370,14 @@ def build_serendipity(area: pd.DataFrame, purpose: pd.DataFrame, cfg: Config) ->
                 base_rows.append({"purpose": pur, "baseline": name, "rank": i, "area_code": c})
         g = add_unexpectedness(g, inertia, cfg)
         g["serendipity_score"] = combine_scores(g["relevance"], g["unexpectedness"], cfg.r_floor)
+        if cfg.exclude_inertia:
+            g.loc[g["in_inertia_topk"], "serendipity_score"] = np.nan
         g["eligible"] = g["serendipity_score"].notna()
         g["score_rank"] = g["serendipity_score"].rank(ascending=False, method="first")
         order = mmr_rerank(g, "serendipity_score", cfg.top_k * 2, cfg.mmr_lambda, cfg.spatial_scale_km)
         g["mmr_rank"] = np.nan
         g.loc[order, "mmr_rank"] = np.arange(1, len(order) + 1)
+        g = add_band_picks(g, cfg)
         g["reason"] = g.apply(reason_text, axis=1)
         out.append(g)
     full = pd.concat(out, ignore_index=True)
@@ -344,7 +386,31 @@ def build_serendipity(area: pd.DataFrame, purpose: pd.DataFrame, cfg: Config) ->
     return full, base
 
 
+BAND_LABELS = ["가까운데 안 가 본 곳", "중간 거리", "멀지만 의외로 괜찮은 곳"]
+
+
+def add_band_picks(g: pd.DataFrame, cfg: Config) -> pd.DataFrame:
+    """이동시간 구간마다 MMR로 band_quota곳씩 뽑는다. travel_min 열이 없으면 건너뛴다."""
+    g = g.copy()
+    g["band"] = None
+    g["band_rank"] = np.nan
+    if "travel_min" not in g.columns:
+        return g
+    edges = [-np.inf, *cfg.band_edges]
+    g["band"] = pd.cut(g["travel_min"], edges, labels=BAND_LABELS[:len(edges) - 1]).astype(object)
+    for band in BAND_LABELS:
+        idx = g.index[g["band"] == band]
+        if len(idx) == 0:
+            continue
+        sub = g.loc[idx].reset_index(drop=True)
+        order = mmr_rerank(sub, "serendipity_score", cfg.band_quota, cfg.mmr_lambda, cfg.spatial_scale_km)
+        g.loc[idx[order], "band_rank"] = np.arange(1, len(order) + 1)
+    return g
+
+
 def reason_text(r: pd.Series) -> str:
+    if r.get("in_inertia_topk", False):
+        return "관성 상위권(늘 가던 곳)이라 제외"
     if not r.get("eligible", False):
         return "관련성 하한 미달로 제외"
     parts = []
@@ -354,8 +420,6 @@ def reason_text(r: pd.Series) -> str:
         parts.append("도시 전체 인기 하위권")
     if r["u_cat"] >= 0.7:
         parts.append("관성 상위권과 업종 구성이 다름")
-    if r["u_spatial"] >= 0.7:
-        parts.append(f"관성 상위권에서 {r['spatial_distance_km']:.1f}km 떨어짐")
     if r["relevance"] >= 0.85:
         parts.append("목적 매력도 상위")
     return " · ".join(parts) or "관련성·의외성 균형"
@@ -365,7 +429,7 @@ OUT_COLS = ["purpose", "mmr_rank", "score_rank", "area_code", "area_name", "prim
             "serendipity_score", "relevance", "unexpectedness", "u_resid", "u_novelty", "u_cat", "u_spatial",
             "r_attract", "r_access", "relevance_source", "inflow_residual_z", "cat_distance", "spatial_distance_km",
             "dist_km", "mean_period_ratio", "observed_inflow", "lagged_total_sales", "lagged_purpose_sales", "path_v0_score",
-            "in_inertia_topk", "eligible", "reason"]
+            "travel_min", "travel_min_source", "band", "band_rank", "in_inertia_topk", "eligible", "reason"]
 
 
 def top_list(full: pd.DataFrame, pur: str, k: int) -> list[str]:
@@ -483,6 +547,8 @@ def sensitivity(area: pd.DataFrame, purpose: pd.DataFrame, cfg: Config, ref: pd.
         "lambda=0.5": dict(mmr_lambda=0.5), "lambda=0.9": dict(mmr_lambda=0.9), "lambda=1.0(MMR 끔)": dict(mmr_lambda=1.0),
         "U=잔차만": dict(w_resid=1.0, w_novelty=0.0, w_cat=0.0, w_spatial=0.0),
         "U=새로움 제외(과제 원정의)": dict(w_resid=0.5, w_novelty=0.0, w_cat=0.25, w_spatial=0.25),
+        "v0(공간 거리 가점, 관성 미제외)": dict(w_resid=0.3, w_novelty=0.2, w_cat=0.25, w_spatial=0.25,
+                                       exclude_inertia=False),
         "U=균등": dict(w_resid=0.25, w_novelty=0.25, w_cat=0.25, w_spatial=0.25),
         "U=거리만": dict(w_resid=0.0, w_novelty=0.0, w_cat=0.5, w_spatial=0.5),
         "K=5": dict(top_k=5),
@@ -531,11 +597,20 @@ def counterfactual(full: pd.DataFrame, base: pd.DataFrame, cfg: Config, shares=(
 
 def run(args: argparse.Namespace) -> None:
     root = Path(args.root)
-    cfg = Config(top_k=args.top_k, r_floor=args.r_floor, mmr_lambda=args.mmr_lambda)
+    cfg = Config(top_k=args.top_k, r_floor=args.r_floor, mmr_lambda=args.mmr_lambda, band_quota=args.band_quota)
+    if args.origin == "hufs_seoul":
+        run_hufs(root, args, cfg)
+        return
     area, purpose = load_inputs(root, args.quarter, use_movement=True)
     full, base = build_serendipity(area, purpose, cfg)
     out = root / args.output
     out.mkdir(parents=True, exist_ok=True)
+    band_cols = ["purpose", "band", "band_rank", "area_code", "area_name", "primary_district_name", "area_type_name",
+                 "travel_min", "travel_min_source", "relevance", "unexpectedness", "serendipity_score", "reason"]
+    bp = full[full["band_rank"].notna()].copy()
+    bp["band"] = pd.Categorical(bp["band"], BAND_LABELS, ordered=True)
+    bp.sort_values(["purpose", "band", "band_rank"])[band_cols].to_csv(
+        out / "serendipity_band_picks.csv", index=False, encoding="utf-8-sig")
     full = full.sort_values(["purpose", "mmr_rank", "score_rank"], na_position="last")
     full[OUT_COLS].to_csv(out / "serendipity_ranking_latest.csv", index=False, encoding="utf-8-sig")
     full[full["mmr_rank"] <= cfg.top_k][OUT_COLS].to_csv(out / "serendipity_top10_by_purpose.csv",
@@ -559,6 +634,33 @@ def run(args: argparse.Namespace) -> None:
     print(f"wrote serendipity ranking: {len(full):,} rows, top-{cfg.top_k} for {full['purpose'].nunique()} purposes")
 
 
+def run_hufs(root: Path, args: argparse.Namespace, cfg: Config) -> None:
+    area, purpose = load_hufs_inputs(root, args.quarter)
+    full, base = build_serendipity(area, purpose, cfg)
+    out = root / args.output / "hufs_seoul"
+    out.mkdir(parents=True, exist_ok=True)
+    full = full.sort_values(["purpose", "mmr_rank", "score_rank"], na_position="last")
+    full[OUT_COLS + ["reach_status", "wait_risk"]].to_csv(out / "hufs_seoul_serendipity_ranking.csv",
+                                                          index=False, encoding="utf-8-sig")
+    cols = ["purpose", "band", "band_rank", "area_code", "area_name", "primary_district_name", "area_type_name",
+            "travel_min", "travel_min_source", "reach_status", "wait_risk", "relevance", "unexpectedness",
+            "serendipity_score", "u_resid", "u_novelty", "u_cat", "reason"]
+    picks = full[full["band_rank"].notna()].copy()
+    picks["band"] = pd.Categorical(picks["band"], BAND_LABELS, ordered=True)
+    picks.sort_values(["purpose", "band", "band_rank"])[cols].to_csv(out / "hufs_seoul_band_picks.csv",
+                                                                     index=False, encoding="utf-8-sig")
+    base.to_csv(out / "hufs_seoul_inertia_baselines_top10.csv", index=False, encoding="utf-8-sig")
+    beyond_accuracy(full, base, cfg).to_csv(out / "hufs_seoul_beyond_accuracy.csv", index=False, encoding="utf-8-sig")
+    summary = {"origin": "한국외대 서울캠퍼스", "origin_latlon": HUFS_SEOUL, "quarter": args.quarter,
+               "candidates": int(full["area_code"].nunique()),
+               "measured_travel_time": int((area["travel_min_source"] == "ODsay 측정(대기 미포함)").sum()),
+               "band_sizes": full.drop_duplicates("area_code")["band"].value_counts().to_dict(),
+               "config": {k: v for k, v in cfg.__dict__.items()},
+               "observed_inflow_source": str(area["observed_source"].iloc[0])}
+    (out / "run_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+    print(f"wrote HUFS Seoul serendipity: {full['area_code'].nunique()} areas, {len(picks)} band picks")
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=Path(__file__).resolve().parents[1])
@@ -566,6 +668,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--top-k", type=int, default=10)
     ap.add_argument("--r-floor", type=float, default=0.6)
     ap.add_argument("--mmr-lambda", type=float, default=0.7)
+    ap.add_argument("--band-quota", type=int, default=3)
+    ap.add_argument("--origin", choices=["dongdaemun", "hufs_seoul"], default="dongdaemun")
     ap.add_argument("--output", default="data/processed/serendipity_ranking")
     return ap.parse_args()
 
