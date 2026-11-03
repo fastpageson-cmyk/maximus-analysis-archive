@@ -1,0 +1,333 @@
+﻿card_id,method,purpose,상호,소분류명_원,소분류명,목적_v1규칙,판정,has_tag_v0,has_tag_v1est
+C0191,near_rep,식사,착한회집,일식 회/초밥,일식 회/초밥,식사,유지,True,True
+C0094,serendipity,여가문화,박스호텔,여관/모텔,여관/모텔,,제외: boundary:여관/모텔,True,True
+C0025,serendipity,쇼핑,데님리,남성 의류 소매업,남성 의류 소매업,쇼핑,유지,True,True
+C0124,serendipity,카페,이리카페,카페,카페,카페,유지,True,True
+C0089,serendipity,여가문화,연탁구클럽,탁구장,탁구장,여가문화,유지,True,True
+C0331,random_area,쇼핑,유텔레콤,핸드폰 소매업,핸드폰 소매업,쇼핑,유지,False,False
+C0219,near_rep,여가문화,빌킬당구장,당구장,당구장,여가문화,유지,False,False
+C0444,inertia_rule,식사,대게식당,해산물 구이/찜,해산물 구이/찜,식사,유지,True,True
+C0010,serendipity,공부,초전서예교습소,기타 예술/스포츠 교육기관,기타 예술/스포츠 교육기관,,공부 제외(학원·문구),True,True
+C0330,random_area,쇼핑,태형전기.냉동,전기용품/조명장치 소매업,전기용품/조명장치 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0512,inertia_rule,카페,카페톡,카페,카페,카페,유지,True,True
+C0238,near_rep,쇼핑,제이댄스웨어,기타 의류 소매업,기타 의류 소매업,쇼핑,유지,False,False
+C0012,serendipity,공부,온리스터디카페,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0054,serendipity,쇼핑,필립컴퍼니,시계/귀금속 소매업,시계/귀금속 소매업,쇼핑,유지,True,True
+C0126,serendipity,카페,어라운드데이,카페,카페,카페,유지,False,False
+C0343,random_area,쇼핑,크레노,슈퍼마켓,슈퍼마켓,쇼핑,유지,False,False
+C0301,random_area,카페,묘사,카페,카페,카페,유지,False,False
+C0282,random_area,식사,다이천마떡,김밥/만두/분식,김밥/만두/분식,식사,유지,True,True
+C0108,serendipity,여가문화,영광노래연습장,노래방,노래방,여가문화,유지,False,False
+C0080,serendipity,식사,초라멘,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0061,serendipity,식사,땡초닭발,그 외 기타 간이 음식점,닭/오리고기 구이/찜,식사,업종 보정(목적 같음),True,True
+C0045,serendipity,쇼핑,은혜정육점,정육점,정육점,쇼핑,희소 가점 상실(생활형),True,False
+C0363,random_area,공부,플라즈마학원독립문캠퍼스,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0392,random_area,공부,엘리샘의꿈꾸는공부방,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0509,inertia_rule,카페,제너럴플라워&카페,카페,카페,카페,유지,False,False
+C0226,near_rep,공부,도올미술학원,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0023,serendipity,공부,메이크앤브레이크,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0410,inertia_rule,식사,부다스벨리,경양식,경양식,식사,유지,True,True
+C0242,near_rep,공부,나의첫번째;피아노음악교습소,음악학원,음악학원,,공부 제외(학원·문구),False,False
+C0109,serendipity,카페,몽애,커피숍,커피숍,카페,유지,True,True
+C0099,serendipity,여가문화,엔비짐PT,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0016,serendipity,공부,메이크잇독서실,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0009,serendipity,공부,음악예술사,서점,서점,공부,유지,True,True
+C0308,random_area,식사,주영주임대,일식 회/초밥,일식 회/초밥,식사,유지,False,False
+C0357,random_area,카페,팥고당명일명성점,카페,카페,카페,유지,False,False
+C0088,serendipity,여가문화,i7PC방,PC방,PC방,,제외: boundary:PC방,True,True
+C0058,serendipity,식사,꽃제비칼국수,국수/칼국수,국수/칼국수,식사,유지,True,True
+C0302,random_area,쇼핑,육덕진축산물도매센터,정육점,정육점,쇼핑,유지,False,False
+C0051,serendipity,쇼핑,호남전기,전기용품/조명장치 소매업,전기용품/조명장치 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0034,serendipity,쇼핑,도배플러스,벽지/장판/마루 소매업,벽지/장판/마루 소매업,,제외: subtype,True,True
+C0205,near_rep,쇼핑,다올뷰티,화장품 소매업,화장품 소매업,쇼핑,유지,False,False
+C0499,inertia_rule,카페,뮤게(Muguet),커피숍,커피숍,카페,유지,False,False
+C0053,serendipity,쇼핑,플라워매니아,꽃집,꽃집,쇼핑,유지,True,True
+C0042,serendipity,쇼핑,은혜농산,반찬/식료품 소매업,반찬/식료품 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0188,near_rep,여가문화,더플레이,전자 게임장,전자 게임장,여가문화,유지,True,True
+C0030,serendipity,쇼핑,동도샤ㅍ,한복 소매업,한복 소매업,쇼핑,유지,True,True
+C0284,random_area,카페,카페플래닝스쿨,커피숍,커피숍,카페,유지,True,True
+C0273,random_area,식사,더맛존바베큐,요리 주점,요리 주점,식사,유지,True,True
+C0120,serendipity,카페,매일그릭,아이스크림,아이스크림,카페,유지,True,True
+C0315,random_area,쇼핑,윈스탑,가방 소매업,가방 소매업,쇼핑,유지,False,False
+C0004,serendipity,공부,제이유,외국어학원,외국어학원,,공부 제외(학원·문구),True,True
+C0026,serendipity,쇼핑,중랑구24시출장열쇠집도어락비번분실문수리면목동게이트맨,철물/공구 소매업,철물/공구 소매업,,제외: subtype,True,True
+C0467,inertia_rule,식사,BHC 강남반포점,호프/통닭,호프/통닭,식사,유지,True,True
+C0268,near_rep,공부,스텝영어학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),True,True
+C0186,near_rep,쇼핑,은혜정육점,정육점,정육점,쇼핑,희소 가점 상실(생활형),True,False
+C0471,inertia_rule,식사,오비어밤,생맥주 전문,생맥주 전문,식사,유지,True,True
+C0173,near_rep,식사,강변7번포차,김밥/만두/분식,생맥주 전문,식사,업종 보정(목적 같음),True,True
+C0412,inertia_rule,식사,야마이태원점,백반/한정식,백반/한정식,식사,유지,False,False
+C0086,serendipity,여가문화,브로젝스이태원점주,볼링장,볼링장,여가문화,유지,True,True
+C0057,serendipity,식사,상계곱창,곱창 전골/구이,곱창 전골/구이,식사,유지,True,True
+C0345,random_area,여가문화,1.2.3노래연습장,노래방,노래방,여가문화,유지,False,False
+C0110,serendipity,카페,카페플래닝스쿨,커피숍,커피숍,카페,유지,True,True
+C0044,serendipity,쇼핑,한국민속악기,악기 소매업,악기 소매업,쇼핑,유지,True,True
+C0128,serendipity,카페,따우전드,카페,카페,카페,유지,False,False
+C0101,serendipity,여가문화,1%코인노래연습장,노래방,노래방,여가문화,유지,False,False
+C0513,inertia_rule,카페,코랄밸리,커피숍,커피숍,카페,유지,False,False
+C0097,serendipity,여가문화,호텔더디자이너스프리미어성수&건대,호텔/리조트,호텔/리조트,,제외: boundary:호텔/리조트,True,True
+C0033,serendipity,쇼핑,참약사플러스약국,약국,약국,,제외: subtype,True,True
+C0060,serendipity,식사,상계솥뚜껑삼겹살,호프/통닭,돼지고기 구이/찜,식사,업종 보정(목적 같음),True,True
+C0230,near_rep,카페,니토,카페,카페,카페,유지,False,False
+C0295,random_area,쇼핑,클립,여성 의류 소매업,여성 의류 소매업,쇼핑,유지,False,False
+C0503,inertia_rule,카페,까페소노,커피숍,커피숍,카페,유지,True,True
+C0254,near_rep,여가문화,힐모텔,여관/모텔,여관/모텔,,제외: boundary:여관/모텔,False,False
+C0059,serendipity,식사,마이보쌈,일식,족발/보쌈,식사,업종 보정(목적 같음),True,True
+C0052,serendipity,쇼핑,마마스패브릭,침구류/커튼 소매업,침구류/커튼 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0002,serendipity,공부,아토아뜰리에,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0008,serendipity,공부,대정보습학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),True,True
+C0309,random_area,식사,비스트로우리,백반/한정식,백반/한정식,식사,유지,False,False
+C0035,serendipity,쇼핑,캐빈스포츠,자전거 소매업,자전거 소매업,쇼핑,유지,True,True
+C0194,near_rep,식사,곱창컴퍼니 수유본점,한식,한식,식사,유지,True,True
+C0411,inertia_rule,식사,노토리어스,피자,피자,식사,유지,False,False
+C0520,inertia_rule,카페,콩스커피,까페,까페,카페,유지,True,True
+C0018,serendipity,공부,태릉블루빌,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0427,inertia_rule,식사,풍년해물탕,국/탕/찌개류,국/탕/찌개류,식사,유지,True,True
+C0118,serendipity,카페,cafe 라이스,커피숍,커피숍,카페,유지,True,True
+C0386,random_area,여가문화,뽑기아지트,기타 오락장,기타 오락장,여가문화,유지,False,False
+C0477,inertia_rule,식사,퀴즈노스롯데월드어드벤처점,피자,피자,식사,유지,True,True
+C0100,serendipity,여가문화,신금호당구장,당구장,당구장,여가문화,유지,True,True
+C0320,random_area,식사,부리또잇,기타 서양식 음식점,기타 서양식 음식점,식사,유지,True,True
+C0063,serendipity,식사,청담수산마켓,일식 회/초밥,일식 회/초밥,식사,유지,True,True
+C0391,random_area,공부,다소리뮤직,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0283,random_area,식사,지바,백반/한정식,백반/한정식,식사,유지,False,False
+C0133,near_rep,쇼핑,제일한과,슈퍼마켓,슈퍼마켓,쇼핑,유지,False,False
+C0145,near_rep,식사,한방왕족발도령,족발/보쌈,족발/보쌈,식사,유지,False,False
+C0201,near_rep,쇼핑,헤일비플라워,꽃집,꽃집,쇼핑,유지,False,False
+C0112,serendipity,카페,정다방,카페,카페,카페,유지,True,True
+C0372,random_area,카페,샐레트 구의점,커피숍,커피숍,카페,유지,False,False
+C0075,serendipity,식사,거북곱창,곱창 전골/구이,곱창 전골/구이,식사,유지,True,True
+C0069,serendipity,식사,혜진곱창,곱창 전골/구이,곱창 전골/구이,식사,유지,True,True
+C0021,serendipity,공부,뮤직피플,음악학원,음악학원,,공부 제외(학원·문구),False,False
+C0031,serendipity,쇼핑,전진종합장식,벽지/장판/마루 소매업,벽지/장판/마루 소매업,,제외: subtype,True,True
+C0469,inertia_rule,식사,한솔구내식당,한식,한식,식사,유지,True,True
+C0028,serendipity,쇼핑,페일터콰이즈,유아용 의류 소매업,유아용 의류 소매업,쇼핑,유지,True,True
+C0038,serendipity,쇼핑,중곡LG인테리어,벽지/장판/마루 소매업,벽지/장판/마루 소매업,,제외: subtype,True,True
+C0492,inertia_rule,카페,올림픽홀카페,커피숍,커피숍,카페,유지,True,True
+C0065,serendipity,식사,고향빈대떡,그 외 기타 간이 음식점,그 외 기타 간이 음식점,식사,유지,True,True
+C0085,serendipity,여가문화,INTERNATIONALSPORTSREHAB,종합 스포츠시설,종합 스포츠시설,,제외: name,True,True
+C0228,near_rep,여가문화,영광노래연습장,노래방,노래방,여가문화,유지,False,False
+C0208,near_rep,쇼핑,레더파크,기타 의류 소매업,기타 의류 소매업,쇼핑,유지,False,False
+C0449,inertia_rule,식사,무카이노 고우,일식,일식,식사,유지,False,False
+C0015,serendipity,공부,서점로티,서점,서점,공부,유지,False,False
+C0123,serendipity,카페,La Dariole(라 다리올),커피숍,커피숍,카페,유지,False,False
+C0405,random_area,여가문화,원데이피티,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0472,inertia_rule,식사,더차이홍,중국집,중국집,식사,유지,True,True
+C0189,near_rep,식사,태능전집,전/부침개,전/부침개,식사,유지,False,False
+C0147,near_rep,식사,꽃제비칼국수,국수/칼국수,국수/칼국수,식사,유지,True,True
+C0312,random_area,쇼핑,먹자건어물,건어물/젓갈 소매업,건어물/젓갈 소매업,쇼핑,유지,False,False
+C0258,near_rep,공부,뮤직피플실용음악학원,음악학원,음악학원,,공부 제외(학원·문구),False,False
+C0442,inertia_rule,식사,레드폭스,경양식,경양식,식사,유지,True,True
+C0036,serendipity,쇼핑,엠블럼,실/섬유제품 소매업,실/섬유제품 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0187,near_rep,여가문화,큐브코인노래연습장이태원점,노래방,노래방,여가문화,유지,True,True
+C0103,serendipity,여가문화,빌킬당구장,당구장,당구장,여가문화,유지,False,False
+C0032,serendipity,쇼핑,지효한복,한복 소매업,한복 소매업,쇼핑,유지,True,True
+C0533,inertia_rule,카페,블랙망고커피망고내커피,카페,카페,카페,유지,False,False
+C0307,random_area,식사,엄마닭발,닭/오리고기 구이/찜,닭/오리고기 구이/찜,식사,유지,True,True
+C0102,serendipity,여가문화,삼호당구장,당구장,당구장,여가문화,유지,False,False
+C0013,serendipity,공부,다소리뮤직,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0105,serendipity,여가문화,GYMSHAPE,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0388,random_area,여가문화,팀알앤디,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0333,random_area,카페,공차숙명여대점,카페,카페,카페,유지,True,True
+C0082,serendipity,식사,백곰,요리 주점,요리 주점,식사,유지,True,True
+C0439,inertia_rule,식사,히말라야,경양식,경양식,식사,유지,True,True
+C0249,near_rep,카페,상가(Sangha),커피숍,커피숍,카페,유지,True,True
+C0066,serendipity,식사,레드컵스,그 외 기타 간이 음식점,그 외 기타 간이 음식점,식사,유지,True,True
+C0524,inertia_rule,카페,티희차 아이파크삼성역점,커피숍,커피숍,카페,유지,False,False
+C0460,inertia_rule,식사,(주)씨에스피푸드 르사이공 센트럴시티점,"외국음식전문점(인도,태국등)","외국음식전문점(인도,태국등)",식사,유지,True,True
+C0125,serendipity,카페,위켄드 피크닉(Weekend Picnic),커피숍,커피숍,카페,유지,False,False
+C0006,serendipity,공부,도올미술학원,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0416,inertia_rule,식사,동대문쉼터,패스트푸드,패스트푸드,식사,유지,True,True
+C0478,inertia_rule,식사,넥스트 뮤지엄,패밀리레스트랑,패밀리레스트랑,식사,유지,True,True
+C0447,inertia_rule,식사,보,경양식,경양식,식사,유지,True,True
+C0090,serendipity,여가문화,광진큐이디골프아카데미,골프 연습장,골프 연습장,여가문화,유지,True,True
+C0040,serendipity,쇼핑,크리스패션,운동용품 소매업,운동용품 소매업,쇼핑,유지,True,True
+C0067,serendipity,식사,미락칡냉면,냉면/밀면,냉면/밀면,식사,유지,True,True
+C0494,inertia_rule,카페,샘커피숍,카페,카페,카페,유지,True,True
+C0432,inertia_rule,식사,홍탁명가,정종/대포집/소주방,정종/대포집/소주방,식사,유지,True,True
+C0212,near_rep,여가문화,세븐노래방,노래방,노래방,여가문화,유지,False,False
+C0177,near_rep,카페,인치스,카페,카페,카페,유지,False,False
+C0319,random_area,카페,무이로커피,카페,카페,카페,유지,False,False
+C0162,near_rep,여가문화,1%코인노래연습장,노래방,노래방,여가문화,유지,False,False
+C0370,random_area,카페,커피거리,카페,카페,카페,유지,False,False
+C0184,near_rep,카페,시저지,카페,카페,카페,유지,True,True
+C0241,near_rep,카페,카페미뇽수유역점,카페,카페,카페,유지,False,False
+C0062,serendipity,식사,부리또잇,기타 서양식 음식점,기타 서양식 음식점,식사,유지,True,True
+C0079,serendipity,식사,옛날양푼이동태매운탕,해산물 구이/찜,해산물 구이/찜,식사,유지,True,True
+C0072,serendipity,식사,화우동산,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0107,serendipity,여가문화,점핑신드롬,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0024,serendipity,공부,기강수학학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0210,near_rep,여가문화,신금호노래연습장,노래방,노래방,여가문화,유지,False,False
+C0190,near_rep,쇼핑,안나홈,침구류/커튼 소매업,침구류/커튼 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0115,serendipity,카페,밀물호프,카페,생맥주 전문,식사,목적 변경 → 식사,True,True
+C0276,random_area,식사,來(래),호프/통닭,호프/통닭,식사,유지,True,True
+C0121,serendipity,카페,해머커피로스터스,카페,카페,카페,유지,True,True
+C0351,random_area,식사,명품육사우향우,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,False,False
+C0430,inertia_rule,식사,등대잔치국수,국수/칼국수,국수/칼국수,식사,유지,True,True
+C0354,random_area,여가문화,성북노래방,노래방,노래방,여가문화,유지,False,False
+C0181,near_rep,공부,음악예술사,서점,서점,공부,유지,True,True
+C0111,serendipity,카페,킹스컵밥 숙대본점,커피숍,김밥/만두/분식,식사,목적 변경 → 식사,True,True
+C0336,random_area,공부,국풍2000풀무국어학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0083,serendipity,식사,소와나성수,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,True,True
+C0091,serendipity,여가문화,선일당구장,당구장,당구장,여가문화,유지,True,True
+C0491,inertia_rule,카페,토리,커피숍,커피숍,카페,유지,False,False
+C0149,near_rep,쇼핑,챔피온,예술품 소매업,예술품 소매업,쇼핑,유지,False,False
+C0114,serendipity,카페,동부다방,카페,카페,카페,유지,True,True
+C0229,near_rep,카페,반숙상회,카페,카페,카페,유지,False,False
+C0154,near_rep,쇼핑,정든옷집,여성 의류 소매업,여성 의류 소매업,쇼핑,유지,False,False
+C0456,inertia_rule,식사,큰손갈비,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,True,True
+C0093,serendipity,여가문화,Y.N.스크린골프클럽,골프 연습장,골프 연습장,여가문화,유지,True,True
+C0039,serendipity,쇼핑,아림화장품,화장품 소매업,화장품 소매업,쇼핑,유지,True,True
+C0517,inertia_rule,카페,커피클리닉,카페,카페,,제외: name,False,False
+C0001,serendipity,공부,비전스터디카페,독서실/스터디 카페,독서실/스터디 카페,공부,유지,True,True
+C0359,random_area,여가문화,광진큐이디골프아카데미,골프 연습장,골프 연습장,여가문화,유지,True,True
+C0251,near_rep,쇼핑,칠성슈퍼,슈퍼마켓,슈퍼마켓,쇼핑,유지,False,False
+C0413,inertia_rule,식사,신서갈비,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,True,True
+C0056,serendipity,식사,고도라멘,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0361,random_area,카페,콩쥬,카페,카페,카페,유지,False,False
+C0288,random_area,식사,수유리쭈꾸미,해산물 구이/찜,해산물 구이/찜,식사,유지,False,False
+C0135,near_rep,쇼핑,씨앗나라,채소/과일 소매업,채소/과일 소매업,쇼핑,유지,False,False
+C0087,serendipity,여가문화,오프더월클라이밍,기타 스포츠시설 운영업,기타 스포츠시설 운영업,여가문화,유지,True,True
+C0498,inertia_rule,카페,카페시사,카페,카페,카페,유지,True,True
+C0291,random_area,쇼핑,도이체,가구 소매업,가구 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0129,serendipity,카페,바람재플라네,카페,카페,카페,유지,False,False
+C0422,inertia_rule,식사,코너육사사일(corner 6441),감성주점,감성주점,식사,유지,False,False
+C0332,random_area,카페,크럼블로스터스,커피숍,커피숍,카페,유지,False,False
+C0443,inertia_rule,식사,익선동자갈치,횟집,횟집,식사,유지,True,True
+C0007,serendipity,공부,도시편집연구소,문구/회화용품 소매업,문구/회화용품 소매업,,공부 제외(학원·문구),False,False
+C0217,near_rep,여가문화,크리스호스텔,여관/모텔,여관/모텔,,제외: boundary:여관/모텔,False,False
+C0146,near_rep,쇼핑,진도특산,건어물/젓갈 소매업,건어물/젓갈 소매업,쇼핑,유지,False,False
+C0382,random_area,여가문화,짐쉐이프,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0122,serendipity,카페,카페8(Cafe 8),커피숍,커피숍,카페,유지,False,False
+C0421,inertia_rule,식사,큰손갈비,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,True,True
+C0225,near_rep,카페,놀숲숙대입구점,커피숍,커피숍,카페,유지,False,False
+C0071,serendipity,식사,미림족발,족발/보쌈,족발/보쌈,식사,유지,True,True
+C0448,inertia_rule,식사,이태원매운우동,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0402,random_area,여가문화,시대,노래방,노래방,여가문화,유지,False,False
+C0055,serendipity,식사,즉석우동,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0192,near_rep,식사,을지경양식돈까스 월계점,경양식,경양식,식사,유지,True,True
+C0199,near_rep,공부,그림상자미술학원,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0073,serendipity,식사,장군숯불집,일식,돼지고기 구이/찜,식사,업종 보정(목적 같음),True,True
+C0257,near_rep,여가문화,플라워모텔,여관/모텔,여관/모텔,,제외: boundary:여관/모텔,False,False
+C0233,near_rep,여가문화,Y.N.스크린골프클럽,골프 연습장,골프 연습장,여가문화,유지,True,True
+C0084,serendipity,식사,러브제이,베트남식 전문,베트남식 전문,식사,유지,True,True
+C0338,random_area,카페,카페라이스,카페,카페,카페,유지,False,False
+C0287,random_area,여가문화,해밀톤관광주,호텔/리조트,호텔/리조트,,제외: boundary:호텔/리조트,True,True
+C0508,inertia_rule,카페,카페베네 청량리1호점,커피숍,커피숍,카페,유지,True,True
+C0440,inertia_rule,식사,참치공방,일식 회/초밥,일식 회/초밥,식사,유지,True,True
+C0395,random_area,카페,카페브니엘,카페,카페,카페,유지,False,False
+C0070,serendipity,식사,기댈빙,통닭(치킨),통닭(치킨),식사,유지,True,True
+C0043,serendipity,쇼핑,황실보석,시계/귀금속 소매업,시계/귀금속 소매업,쇼핑,유지,True,True
+C0215,near_rep,공부,성북하연과학교습소,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0011,serendipity,공부,준스터디카페,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0342,random_area,쇼핑,호남반찬,반찬/식료품 소매업,반찬/식료품 소매업,쇼핑,유지,False,False
+C0175,near_rep,식사,착한회집,횟집,횟집,식사,유지,True,True
+C0029,serendipity,쇼핑,코아수산,수산물 소매업,수산물 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0255,near_rep,공부,김경미논술국어교습소,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0461,inertia_rule,식사,천진포자,중국식,중국식,식사,유지,True,True
+C0293,random_area,쇼핑,자양화원,꽃집,꽃집,쇼핑,유지,False,False
+C0131,near_rep,식사,쵸비,경양식,경양식,식사,유지,False,False
+C0218,near_rep,쇼핑,한국민속악기,악기 소매업,악기 소매업,쇼핑,유지,True,True
+C0047,serendipity,쇼핑,티아모,가구 소매업,가구 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0525,inertia_rule,카페,오늘도행복해,카페,카페,카페,유지,False,False
+C0334,random_area,공부,원응사,서점,서점,공부,유지,False,False
+C0204,near_rep,쇼핑,코네,여성 의류 소매업,여성 의류 소매업,쇼핑,유지,False,False
+C0180,near_rep,쇼핑,김에스테틱,화장품 소매업,화장품 소매업,쇼핑,유지,False,False
+C0505,inertia_rule,카페,공차(Gong Cha),커피숍,커피숍,카페,유지,True,True
+C0475,inertia_rule,식사,큰손닭한마리,닭/오리고기 구이/찜,닭/오리고기 구이/찜,식사,유지,True,True
+C0450,inertia_rule,식사,하오하오분식집,김밥/만두/분식,김밥/만두/분식,식사,유지,True,True
+C0496,inertia_rule,카페,로나카페,커피숍,커피숍,카페,유지,False,False
+C0468,inertia_rule,식사,빨대 고추치킨,분식,치킨,식사,업종 보정(목적 같음),True,True
+C0232,near_rep,카페,neato,커피숍,커피숍,카페,유지,False,False
+C0378,random_area,카페,선우로스터스,카페,카페,카페,유지,False,False
+C0356,random_area,공부,명인교육마포지점대치명인학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0000,serendipity,공부,스텝영어학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),True,True
+C0076,serendipity,식사,수유리우동,일식 면 요리,일식 면 요리,식사,유지,True,True
+C0424,inertia_rule,식사,장수한방족발,족발/보쌈,족발/보쌈,식사,유지,True,True
+C0113,serendipity,카페,대한다방,다방,다방,카페,유지,True,True
+C0501,inertia_rule,카페,고디바베이커리 광화문점,커피숍,커피숍,카페,유지,True,True
+C0214,near_rep,공부,아토아뜰리에,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0136,near_rep,식사,진주푸드,백반/한정식,백반/한정식,식사,유지,False,False
+C0050,serendipity,쇼핑,안나홈,침구류/커튼 소매업,침구류/커튼 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0522,inertia_rule,카페,마리짱,커피숍,커피숍,카페,유지,False,False
+C0081,serendipity,식사,공릉동떡볶이,김밥/만두/분식,김밥/만두/분식,식사,유지,True,True
+C0358,random_area,카페,인마이험블커피,카페,카페,카페,유지,False,False
+C0237,near_rep,여가문화,버핏그라운드마포,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0390,random_area,공부,금성문구,문구/회화용품 소매업,문구/회화용품 소매업,,공부 제외(학원·문구),False,False
+C0375,random_area,카페,시프스,카페,카페,카페,유지,False,False
+C0271,random_area,쇼핑,혜성반찬,반찬/식료품 소매업,반찬/식료품 소매업,쇼핑,유지,False,False
+C0104,serendipity,여가문화,휴코인노래연습장,노래방,노래방,여가문화,유지,False,False
+C0098,serendipity,여가문화,뽑기아지트,기타 오락장,기타 오락장,여가문화,유지,False,False
+C0349,random_area,식사,사랑애국밥,국/탕/찌개류,국/탕/찌개류,식사,유지,True,True
+C0417,inertia_rule,식사,중차이,중국집,중국집,식사,유지,True,True
+C0286,random_area,쇼핑,씨앤아이안경마트,안경렌즈 소매업,안경렌즈 소매업,쇼핑,유지,False,False
+C0458,inertia_rule,식사,수산회관,일식,일식,식사,유지,True,True
+C0409,random_area,여가문화,파도노래연습장,노래방,노래방,여가문화,유지,False,False
+C0049,serendipity,쇼핑,메디칼우리약국,약국,약국,,제외: subtype,True,True
+C0482,inertia_rule,식사,고을집,백반/한정식,백반/한정식,식사,유지,True,True
+C0014,serendipity,공부,지혜의숲스터디카페,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0464,inertia_rule,식사,명봉양꼬치,중국집,중국집,식사,유지,True,True
+C0163,near_rep,공부,큰교육,서점,서점,공부,유지,False,False
+C0252,near_rep,카페,블링스타,카페,카페,카페,유지,False,False
+C0278,random_area,식사,빠리짬뽕,중국집,중국집,식사,유지,False,False
+C0506,inertia_rule,카페,명동필름&그라미 명동점,아이스크림,아이스크림,카페,유지,True,True
+C0488,inertia_rule,식사,신꼬끼오,생맥주 전문,생맥주 전문,식사,유지,True,True
+C0041,serendipity,쇼핑,우노스,가방 소매업,가방 소매업,쇼핑,유지,True,True
+C0068,serendipity,식사,토스트앤드핫바,토스트/샌드위치/샐러드,토스트/샌드위치/샐러드,식사,유지,True,True
+C0481,inertia_rule,식사,총각회수산,횟집,횟집,식사,유지,True,True
+C0348,random_area,카페,카지노,카페,카페,카페,유지,False,False
+C0116,serendipity,카페,상가(Sangha),커피숍,커피숍,카페,유지,True,True
+C0515,inertia_rule,카페,Label B(라벨비),까페,까페,카페,유지,True,True
+C0326,random_area,식사,옛날양푼이동태매운탕,해산물 구이/찜,해산물 구이/찜,식사,유지,True,True
+C0270,random_area,카페,루다브레드,카페,카페,카페,유지,False,False
+C0197,near_rep,식사,광안리,요리 주점,요리 주점,식사,유지,False,False
+C0423,inertia_rule,식사,세진식당,백반/한정식,백반/한정식,식사,유지,True,True
+C0429,inertia_rule,식사,두리아,요리 주점,요리 주점,식사,유지,True,True
+C0290,random_area,여가문화,스쿼시그라운드,스쿼시/라켓볼장,스쿼시/라켓볼장,여가문화,유지,True,True
+C0196,near_rep,카페,카페포텐셜,카페,카페,카페,유지,True,True
+C0516,inertia_rule,카페,모드뜨레,커피숍,커피숍,카페,유지,True,True
+C0532,inertia_rule,카페,브라질커피숍,카페,카페,카페,유지,False,False
+C0017,serendipity,공부,금성문구,문구/회화용품 소매업,문구/회화용품 소매업,,공부 제외(학원·문구),False,False
+C0245,near_rep,카페,브루밸류,카페,카페,카페,유지,False,False
+C0005,serendipity,공부,츄댄스학원,기타 예술/스포츠 교육기관,기타 예술/스포츠 교육기관,,공부 제외(학원·문구),True,True
+C0222,near_rep,카페,카페스너들,카페,카페,카페,유지,False,False
+C0353,random_area,공부,디와이비마포최선어학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0446,inertia_rule,식사,몰타르,경양식,경양식,식사,유지,True,True
+C0292,random_area,여가문화,적셔노래연습장,노래방,노래방,여가문화,유지,True,True
+C0130,near_rep,식사,대구달구벌막창,요리 주점,곱창 전골/구이,식사,업종 보정(목적 같음),False,False
+C0236,near_rep,카페,공차수유역점,카페,카페,카페,유지,True,True
+C0223,near_rep,공부,수도서림,서점,서점,공부,유지,False,False
+C0048,serendipity,쇼핑,고기랑꽃게랑,반찬/식료품 소매업,반찬/식료품 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0339,random_area,여가문화,브라운휘트니스,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0003,serendipity,공부,디씨문구,문구/회화용품 소매업,문구/회화용품 소매업,,공부 제외(학원·문구),True,True
+C0019,serendipity,공부,그림상자미술학원,미술학원,미술학원,,공부 제외(학원·문구),False,False
+C0206,near_rep,쇼핑,슈즈,신발 소매업,신발 소매업,쇼핑,유지,False,False
+C0274,random_area,식사,아티스트빠,요리 주점,요리 주점,식사,유지,True,True
+C0521,inertia_rule,카페,볼트커피바,카페,카페,카페,유지,False,False
+C0341,random_area,식사,동해해물,백반/한정식,백반/한정식,식사,유지,True,True
+C0106,serendipity,여가문화,아이스팩토리,여관/모텔,여관/모텔,,제외: boundary:여관/모텔,False,False
+C0329,random_area,식사,배고픈덮밥과기대점,기타 한식 음식점,기타 한식 음식점,식사,유지,True,True
+C0318,random_area,쇼핑,S-mart번동점,슈퍼마켓,슈퍼마켓,쇼핑,유지,False,False
+C0150,near_rep,쇼핑,쥬라옵티크,안경렌즈 소매업,안경렌즈 소매업,쇼핑,희소 가점 상실(생활형),True,False
+C0078,serendipity,식사,누리숯불갈비,돼지고기 구이/찜,돼지고기 구이/찜,식사,유지,True,True
+C0322,random_area,공부,카이수학전문학원,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0046,serendipity,쇼핑,토이팝,장난감 소매업,장난감 소매업,쇼핑,유지,True,True
+C0193,near_rep,카페,아임파인,카페,카페,카페,유지,False,False
+C0064,serendipity,식사,뽀빠이족발,족발/보쌈,족발/보쌈,식사,유지,True,True
+C0158,near_rep,공부,다솔피아노교습소,음악학원,음악학원,,공부 제외(학원·문구),False,False
+C0490,inertia_rule,카페,시청광장커피,카페,카페,카페,유지,True,True
+C0305,random_area,공부,하이영어교습소,입시·교과학원,입시·교과학원,,공부 제외(학원·문구),False,False
+C0037,serendipity,쇼핑,신신꼬,신발 소매업,신발 소매업,쇼핑,유지,True,True
+C0493,inertia_rule,카페,서울커피,카페,카페,카페,유지,True,True
+C0137,near_rep,식사,마라톤 마라탕&마라샹궈 공릉점,중국식,중국식,식사,유지,True,True
+C0325,random_area,여가문화,이지피티스튜디오,헬스장,헬스장,,제외: boundary:헬스장,False,False
+C0457,inertia_rule,식사,베라카채플웨딩,뷔페식,뷔페식,식사,유지,True,True
+C0399,random_area,여가문화,영광노래연습장,노래방,노래방,여가문화,유지,False,False
+C0134,near_rep,쇼핑,속옷상설할인매장,기타 의류 소매업,기타 의류 소매업,쇼핑,유지,False,False
+C0020,serendipity,공부,후암독서실,독서실/스터디 카페,독서실/스터디 카페,공부,유지,False,False
+C0074,serendipity,식사,용호식당,일식 회/초밥,일식 회/초밥,식사,유지,True,True
+C0346,random_area,쇼핑,소연화원,꽃집,꽃집,쇼핑,유지,False,False
+C0380,random_area,쇼핑,비저너리,여성 의류 소매업,여성 의류 소매업,쇼핑,유지,False,False
+C0141,near_rep,식사,제스티살룬,피자,피자,식사,유지,True,True
+C0321,random_area,여가문화,코니코인노래연습장이태원점,노래방,노래방,여가문화,유지,True,True
+C0289,random_area,식사,세방황금랜드,김밥/만두/분식,김밥/만두/분식,식사,유지,True,True

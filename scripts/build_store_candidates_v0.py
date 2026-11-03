@@ -112,8 +112,9 @@ def area_reach() -> pd.DataFrame:
     return a.merge(wait, on="area_code", how="left")
 
 
-def main() -> None:
-    stores = pd.read_csv(STORES, dtype={"area_code": str, "store_id": str, "소분류코드": str, "지점명": str, "층": str}, encoding="utf-8-sig")
+def main(tag: str = "v0") -> None:
+    """tag = v0 / v1: 점포 테이블 seoul_store_table_{tag}.csv를 읽어 store_candidates_{tag}.csv를 쓴다."""
+    stores = pd.read_csv(OUT / f"seoul_store_table_{tag}.csv", dtype={"area_code": str, "store_id": str, "소분류코드": str, "지점명": str, "층": str}, encoding="utf-8-sig")
     rank = pd.read_csv(DATA / "serendipity_ranking/serendipity_ranking_latest.csv", dtype={"area_code": str})
     inertia = pd.read_csv(DATA / "serendipity_ranking/inertia_baselines_top10.csv", dtype={"area_code": str})
     reach = area_reach()
@@ -135,7 +136,7 @@ def main() -> None:
     lead = ["group", "purpose", "area_code", "store_id", "walk_from_rep", "reach_flag", "mean_period_ratio", "mmr_rank", "in_k10", "in_k20",
             "t_store_seoulcampus", "seoulcampus_flag", "reach_source", "wait_risk", "t_area"]
     p2 = [c for c in stores.columns if c not in lead]
-    out[lead + p2].to_csv(OUT / "store_candidates_v0.csv", index=False, encoding="utf-8-sig")
+    out[lead + p2].to_csv(OUT / f"store_candidates_{tag}.csv", index=False, encoding="utf-8-sig")
     report(out)
 
 

@@ -120,12 +120,12 @@ def rank(c: pd.DataFrame, w: dict[str, float], vec_cols: list[str], k: int = 10,
     return picked[picked["rank"].le(TOP_N)]
 
 
-def load() -> tuple[pd.DataFrame, list[str]]:
-    c = pd.read_csv(OUT / "store_candidates_v0.csv", dtype={"store_id": str, "area_code": str, "소분류코드": str}, low_memory=False)
+def load(tag: str = "v0") -> tuple[pd.DataFrame, list[str]]:
+    c = pd.read_csv(OUT / f"store_candidates_{tag}.csv", dtype={"store_id": str, "area_code": str, "소분류코드": str}, low_memory=False)
     c = c[c.group.eq("candidate")].copy()
     for col in ["nopo", "tenure10", "goodprice", "franchise", "old_cafe"]:
         c[col] = c[col].astype(bool)
-    stores = pd.read_csv(OUT / "seoul_store_table_v0.csv", dtype={"store_id": str, "소분류코드": str}, usecols=["store_id", "소분류명", "소분류코드", "license_year"])
+    stores = pd.read_csv(OUT / f"seoul_store_table_{tag}.csv", dtype={"store_id": str, "소분류코드": str}, usecols=["store_id", "소분류명", "소분류코드", "license_year"])
     age = (YEAR - stores.license_year)
     stores["age_pct"] = age.groupby(stores.소분류명).rank(pct=True).fillna(0.5)
     c = c.merge(stores[["store_id", "age_pct"]], on="store_id", how="left")
@@ -151,7 +151,7 @@ def load() -> tuple[pd.DataFrame, list[str]]:
     return c, vec_cols
 
 
-def add_review_terms(c: pd.DataFrame, vec_cols: list[str]) -> pd.DataFrame:
+def add_review_terms(c: pd.DataFrame, vec_cols: list[str], tag: str = "v0") -> pd.DataFrame:
     ok = c.review_evidence.eq("ok")
     a = {p: np.array([t in PURPOSE_THEMES.get(p, set()) for t in THEMES], float) for p in PURPOSES}
     fit = pd.Series([c.loc[i, vec_cols].to_numpy(float) @ a[p] for i, p in zip(c.index, c.purpose)], index=c.index)
@@ -159,7 +159,7 @@ def add_review_terms(c: pd.DataFrame, vec_cols: list[str]) -> pd.DataFrame:
     c["u_content"], c["u_local"] = 0.5, 0.5
     if ok.any():
         # 관성 상권 평균 벡터·상권 candidate 평균 벡터는 리뷰가 있는 점포로만 만든다
-        ref = pd.read_csv(OUT / "store_candidates_v0.csv", dtype={"store_id": str, "area_code": str}, low_memory=False)
+        ref = pd.read_csv(OUT / f"store_candidates_{tag}.csv", dtype={"store_id": str, "area_code": str}, low_memory=False)
         ref = ref[ref.group.eq("inertia_ref")].merge(c[["store_id"] + vec_cols].drop_duplicates("store_id"), on="store_id")
         inertia = ref.groupby("area_code")[vec_cols].mean().to_numpy(float)
         v = c[vec_cols].to_numpy(float)
@@ -170,23 +170,25 @@ def add_review_terms(c: pd.DataFrame, vec_cols: list[str]) -> pd.DataFrame:
     return c
 
 
-def main() -> None:
-    c, vec_cols = load()
-    c = add_review_terms(c, vec_cols)
+def main(tag: str = "v0") -> None:
+    """tag = v0 / v1: 입력·출력 파일 이름의 버전."""
+    c, vec_cols = load(tag)
+    c = add_review_terms(c, vec_cols, tag)
     base = rank(c, BASE_W, vec_cols)
     full = score(c, BASE_W).merge(base[["purpose", "store_id", "S", "rank"]], on=["purpose", "store_id"], how="left")
     full["reason"] = [reason(r, {t: r[f"t_{t}"] for t in THEMES}) for _, r in full.iterrows()]
-    full.to_csv(OUT / "store_serendipity_v0.csv", index=False, encoding="utf-8-sig")
+    full.to_csv(OUT / f"store_serendipity_{tag}.csv", index=False, encoding="utf-8-sig")
 
     top = base.merge(full[["purpose", "store_id", "reason"]], on=["purpose", "store_id"])
     top["테마태그"] = [" · ".join(t for t in THEMES if r[f"t_{t}"] >= LIFT_REASON) for _, r in top.iterrows()]
     top["공공태그"] = [" · ".join(n for n, f in [("노포", r.nopo), ("10년+", r.tenure10), ("오래된 카페", r.old_cafe),
                                               ("착한가격", r.goodprice), ("희소 업종", r.rarity >= RARE_REASON)] if f) for _, r in top.iterrows()]
     cols = ["purpose", "rank", "상호", "소분류명", "area_name", "테마태그", "공공태그", "reach_flag", "review_evidence", "reason"]
-    top.sort_values(["purpose", "rank"])[cols].to_csv(PUBLIC / "store_serendipity_top30_v0.csv", index=False, encoding="utf-8-sig")
+    cols += [c for c in ["category_source"] if c in top]  # v1부터
+    top.sort_values(["purpose", "rank"])[cols].to_csv(PUBLIC / f"store_serendipity_top30_{tag}.csv", index=False, encoding="utf-8-sig")
 
     sens = sensitivity(c, vec_cols, base)
-    sens.to_csv(PUBLIC / "store_serendipity_sensitivity_v0.csv", index=False, encoding="utf-8-sig")
+    sens.to_csv(PUBLIC / f"store_serendipity_sensitivity_{tag}.csv", index=False, encoding="utf-8-sig")
     report(c, base, sens)
 
 
