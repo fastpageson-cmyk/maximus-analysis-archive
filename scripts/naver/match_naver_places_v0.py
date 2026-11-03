@@ -3,7 +3,8 @@
     검색   = map.naver.com instant-search, 검색어 = norm(상호) + 도로명(없으면 법정동), coords = 점포 좌표
     판정   = 80m 안 ∧ similar(norm) → exact, 80m 안만 → fuzzy, 없으면 none. 여럿이면 exact 우선, 그다음 가까운 곳
     요청   = 쿠키·캡차 토큰 없이, 단일 스레드, 2~3초 + 무작위 지연. 403·429·캡차 응답은 지수 백오프, 3번 연속이면 멈춤
-    캐시   = 데이터/캐시/naver_search/{store_id}.json (장소 목록만). 재실행하면 캐시가 있는 점포는 건너뜀
+             결과가 없으면 상호만으로 한 번 더 검색한다
+    캐시   = 데이터/캐시/naver_search/{store_id}[_name].json (검색 응답 원본, 장소 정보만 있음). 재실행하면 캐시가 있는 검색은 건너뜀
 출력: 데이터/가공/서울캠/naver_place_match_v0.csv (커밋 금지)
       data/processed/store_level/naver_match_audit_sample_v0.csv (무작위 50곳, place_id·좌표 없음)
 실행: ~/.venvs/maximus/bin/python -I scripts/naver/match_naver_places_v0.py --limit 1   (시험은 --limit으로)
@@ -121,19 +122,29 @@ def targets() -> pd.DataFrame:
     return t
 
 
-def search(client: Polite, store: pd.Series) -> list[dict]:
-    path = CACHE / f"{store.store_id}.json"
+def cached_search(client: Polite, path: Path, query: str, lat: float, lon: float, debug: bool) -> list[dict]:
     if path.exists():
-        return json.loads(path.read_text())
-    data = client.call("GET", SEARCH_URL, params={"query": store.query, "coords": f"{store.lat},{store.lon}"})
-    places = find_places(data)
-    path.write_text(json.dumps(places, ensure_ascii=False))
+        data = json.loads(path.read_text())
+    else:
+        data = client.call("GET", SEARCH_URL, params={"query": query, "coords": f"{lat},{lon}"})
+        path.write_text(json.dumps(data, ensure_ascii=False))
+    if debug:
+        print(f"[debug] {query!r} →", json.dumps(data, ensure_ascii=False)[:800])
+    return find_places(data)
+
+
+def search(client: Polite, store, debug: bool = False) -> list[dict]:
+    """정규화 상호 + 도로명으로 찾고, 없으면 상호만으로 다시 찾는다."""
+    places = cached_search(client, CACHE / f"{store.store_id}.json", store.query, store.lat, store.lon, debug)
+    if not places:
+        places = cached_search(client, CACHE / f"{store.store_id}_name.json", norm(store.상호), store.lat, store.lon, debug)
     return places
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, help="앞에서부터 N곳만(시험용)")
+    ap.add_argument("--debug", action="store_true", help="검색 응답 앞부분 출력")
     args = ap.parse_args()
     CACHE.mkdir(parents=True, exist_ok=True)
     t = targets()
@@ -141,7 +152,7 @@ def main() -> None:
     client, rows = Polite(), []
     try:
         for i, s in enumerate(t.itertuples(index=False), 1):
-            rows.append({"store_id": s.store_id, **judge(s.상호, s.lat, s.lon, search(client, s))})
+            rows.append({"store_id": s.store_id, **judge(s.상호, s.lat, s.lon, search(client, s, args.debug))})
             if i % 50 == 0:
                 print(f"{i}/{len(t)} {datetime.now():%H:%M:%S}", flush=True)
     except Blocked as e:
