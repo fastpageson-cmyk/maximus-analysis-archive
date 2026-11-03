@@ -78,3 +78,18 @@
 - 키워드 집계: `pcmap-api.place.naver.com/graphql`의 `getVisitorReviewStats`. 키워드 코드·문구·선택 인원, 참여 인원(`userCount`), 방문자 리뷰 수만 저장한다. 별점·메뉴·리뷰 본문은 저장하지 않는다. 블로그 리뷰 수는 이 응답에 없다.
 - 요청: 쿠키·캡차 토큰을 보내지 않는다. 단일 스레드로 2~3초 + 무작위 지연을 두고, 403·429·캡차 응답이 3번 연속이면 멈춘다. 캐시(`데이터/캐시/naver_search`, `naver_place`)가 있는 곳은 건너뛴다.
 - 결과 CSV, 캐시, place_id는 커밋하지 않는다. 공개 파일은 `naver_match_audit_sample_v0.csv`(place_id·좌표 없음)뿐이다.
+
+## 점포 의외성 점수 v0
+
+실행: `~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v0.py` (후보 v0 먼저).
+
+- 로컬: `데이터/가공/서울캠/store_serendipity_v0.csv`(후보 전체, 점수 열 포함)
+- 공개: `store_serendipity_top30_v0.csv`(purpose, rank, 상호, 소분류명, area_name, 테마태그, 공공태그, reach_flag, review_evidence, reason), `store_serendipity_sensitivity_v0.csv`(기본판 대비 목적별 상위 30 자카드)
+- 점수: `r_store = 0.4·pct(영업연수|소분류) + 0.2·착한가격 + 0.4·fit`, `u_store = 0.3·희소도 + 0.2·노포/10년+ + 0.3·u_content + 0.2·u_local`, `s_store = r × u`. 상권 안 MMR(λ=0.7, 같은 소분류 1곳)로 3곳을 고르고, `S = serendipity_score × s_store`로 목적별 30곳까지 둔다. 프랜차이즈와 `reach_flag=제외`는 MMR 전에 뺀다.
+
+### v0 한계
+- **리뷰 특성이 없다.** 네이버 키워드 집계 요청(`getVisitorReviewStats`)은 캡차 토큰 없이 보내면 첫 요청부터 429가 온다(2026-11-03). 그래서 모든 점포가 `review_evidence=low`이고, `fit·u_content·u_local`은 0.5다. 테마 사전(P5)도 만들지 못했다. 점수는 영업연수·착한가격·희소도·노포/10년+로만 정해진다.
+- 오래가게 지정 원천이 아직 없다. 인허가가 없는 점포(쇼핑·공부·여가)는 영업연수 백분위를 0.5로 둔다.
+- 서울캠 기준 30분 밖(`제외`)을 빼면 K=10 상권 중 남는 곳이 4~7곳이라, 목적별 추천이 30곳에 못 미친다(식사 21, 카페 8, 공부 10, 쇼핑 12, 여가문화 12).
+- 공부 목적에는 PATH-v0 표를 따라 태권도·필라테스(스포츠강습)가 섞인다.
+- 상권당 3곳 제한 때문에 후보가 30곳보다 적어서, 가중치를 ±0.1 바꿔도 상위 집합이 거의 그대로다(자카드 0.91~1.0). 순서만 바뀐다. K=20일 때는 0.40~0.59다.
