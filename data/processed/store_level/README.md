@@ -94,3 +94,49 @@
 - 오래가게 지정 원천이 아직 없다. 인허가가 없는 점포(쇼핑·공부·여가)는 영업연수 백분위를 0.5로 둔다.
 - 목적별 추천 수는 식사 30, 카페 21, 공부 25, 쇼핑 30, 여가문화 24다. 카페·공부·여가는 상권 안 같은 목적 점포가 적어서 3곳을 못 채우는 상권이 있다.
 - 상권 10곳 × 3곳 = 최대 30곳이라 상위 집합이 거의 정해져 있다. 그래서 가중치를 ±0.1 바꿔도 자카드는 0.82~1.0이다. K=20일 때는 0.41~0.67이다.
+
+## v1 (규칙 보정판)
+
+변경 내용·근거·사전 영향: `docs/store_level_v1_changes.md`. 로컬 실행 프롬프트: `docs/store_level_v1_local_run.md`.
+규칙은 모두 `scripts/campus/서울캠/store_rules_v1.py` 상수다(업종 보정 `NAME_RULES`·`SERVICE_GROUP`, 공부 `NO_PURPOSE_SERVICES_V1`·`STUDY_INCLUDE_BOOKS`, 제외 `EXCLUDE_SUBTYPE_PATTERNS`·`EXCLUDE_NAME_KEYWORDS`·`BOUNDARY_SUBTYPES`, 생활형 `ERRAND_SUBTYPE_PATTERNS`).
+
+실행 순서(저장소 루트, 로컬):
+
+```bash
+~/.venvs/maximus/bin/python -I scripts/campus/서울캠/build_seoul_store_table_v1.py
+~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v1.py
+~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v1.py
+~/.venvs/maximus/bin/python -I scripts/validate_store_serendipity_v1.py
+~/.venvs/maximus/bin/python -I scripts/compare_store_serendipity_v0_v1.py
+```
+
+### 점포 테이블 v1에서 바뀌거나 늘어난 열 (`seoul_store_table_v1.csv`, 로컬·커밋 금지)
+
+| 열 | 설명 |
+|---|---|
+| 소분류명 | **보정된** 소분류명. 상호 키워드 규칙이면 상가정보 소분류명(예: 족발/보쌈), 위생업태 우선이면 위생업태명 |
+| 소분류명_원 | 보정 전 값(상가정보 소분류명, license_only는 위생업태) |
+| category_fixed | 업종이 바뀌었는지 |
+| category_source | sbiz(상가정보 그대로) / license(license_only, 또는 위생업태 우선으로 바뀜) / name_rule(상호 키워드) |
+| 목적 | **점포 단계 목적.** 공부 = 독서실/스터디 카페 + 서점·북카페(`STUDY_INCLUDE_BOOKS`). 학원·문구·스포츠강습은 빈칸. 비목적지는 빈칸 |
+| 목적_보정전 | 비목적지 제외를 적용하기 전 목적(업종 보정·공부 규칙은 적용됨) |
+| exclude_reason | subtype(소분류 패턴) / name(상호 키워드) / boundary:<소분류명>(경계 업종 끔) / 빈칸 |
+| destination | 목적지형 소분류인지. False(생활형: 식료품·정육·침구·가구·가전·조명·안경 등)면 희소도 가점 없음 |
+| rarity | `rarity_raw`, 단 destination=False면 0 |
+| rarity_raw | 1 − 상권 안 백분위(같은 상권 같은 **보정 소분류명** 점포 수). v0는 소분류코드로 묶었다 |
+| 위생업태 | 매칭된 인허가 위생업태(v0에서는 내부 열이었다) |
+
+나머지 열은 v0와 같다.
+
+### 공개 산출물 v1
+
+- `store_serendipity_top30_v1.csv`: v0 열 + `category_source`
+- `store_serendipity_sensitivity_v1.csv`, `survey_cards_v1.csv`, `survey_cards_key_v1.csv`, `validation_summary_v1.json`: v0와 같은 형식
+- `store_serendipity_v0_v1_compare.md`: 목적별 추천 수, 빠진·새 가게, 카드 덱의 공공 태그 없는 비율 비교
+- `store_rules_v1_preimpact_top30.csv`, `store_rules_v1_preimpact_cards.csv`: **v1 결과가 아니다.** 공개 v0 목록에 v1 규칙을 덧씌운 가게별 판정(사전 추정, `scripts/estimate_store_rules_v1_impact.py`)
+
+### v1 한계
+- 키워드·제외 목록은 사람이 정했다. `category_fixed=True`와 `exclude_reason` 표본을 로컬에서 검수해야 한다.
+- 위생업태 우선은 식사 / 주점 / 카페 / 제과 그룹이 다를 때만 쓴다(`LICENSE_OVERRIDE_WITHIN_MEAL=False`).
+- 숙박·헬스장 제외는 이번에 더한 판단이다(PC방 제외·노래방 유지는 팀 기본값). `BOUNDARY_SUBTYPES`로 바꾼다.
+- 공부하기 좋은 일반 카페는 리뷰 키워드가 생긴 뒤에 넣는다.
