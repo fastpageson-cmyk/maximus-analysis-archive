@@ -1,0 +1,82 @@
+{
+  "1_theme_stability": "데이터 없음(키워드 집계 미수집)",
+  "2_construct_validity": "데이터 없음(키워드 집계 미수집)",
+  "3_bias": {
+    "low_by_nopo": {
+      "비노포": 1.0,
+      "노포": 1.0
+    },
+    "low_by_area_type": {
+      "골목상권": 1.0,
+      "관광특구": 1.0,
+      "발달상권": 1.0,
+      "전통시장": 1.0
+    },
+    "warn": false
+  },
+  "4_contribution": {
+    "식사": {
+      "n": 21,
+      "jaccard_with_vs_without_reviews": 1.0,
+      "inertia_area_overlap": 0.0,
+      "ild_subtype": 0.971,
+      "theme_coverage": "데이터 없음"
+    },
+    "카페": {
+      "n": 8,
+      "jaccard_with_vs_without_reviews": 1.0,
+      "inertia_area_overlap": 0.0,
+      "ild_subtype": 0.679,
+      "theme_coverage": "데이터 없음"
+    },
+    "공부": {
+      "n": 10,
+      "jaccard_with_vs_without_reviews": 1.0,
+      "inertia_area_overlap": 0.0,
+      "ild_subtype": 0.933,
+      "theme_coverage": "데이터 없음"
+    },
+    "쇼핑": {
+      "n": 12,
+      "jaccard_with_vs_without_reviews": 1.0,
+      "inertia_area_overlap": 0.0,
+      "ild_subtype": 0.985,
+      "theme_coverage": "데이터 없음"
+    },
+    "여가문화": {
+      "n": 12,
+      "jaccard_with_vs_without_reviews": 1.0,
+      "inertia_area_overlap": 0.0,
+      "ild_subtype": 0.924,
+      "theme_coverage": "데이터 없음"
+    }
+  },
+  "5_match_audit": {
+    "license": {
+      "status": "검수 필요",
+      "n": 50
+    },
+    "naver": {
+      "status": "파일 없음"
+    }
+  },
+  "6_survey": {
+    "sets": 30,
+    "cards_per_set": {
+      "min": 20.0,
+      "max": 20.0
+    },
+    "deck": {
+      "near_rep": 67,
+      "random_area": 67,
+      "serendipity": 63,
+      "inertia_rule": 52
+    },
+    "baseline_mix_per_set": {
+      "inertia_rule": 3.3,
+      "near_rep": 3.37,
+      "random_area": 3.33,
+      "serendipity": 10.0
+    }
+  }
+}

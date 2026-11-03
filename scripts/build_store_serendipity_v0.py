@@ -97,7 +97,7 @@ def reason(row: pd.Series, lifts: dict[str, float]) -> str:
         parts.append("착한가격업소")
     if row.rarity >= RARE_REASON:
         parts.append(f"이 상권에 드문 {row.소분류명}")
-    return " · ".join(parts) or "같은 상권 의외성 상위 업종"
+    return " · ".join(parts) or f"{row.area_name}의 {row.소분류명}"  # 태그가 없으면 중립 문구(설문 카드에서 출처가 드러나지 않게)
 
 
 def score(c: pd.DataFrame, w: dict[str, float]) -> pd.DataFrame:
