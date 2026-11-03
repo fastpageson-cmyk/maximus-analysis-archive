@@ -4,7 +4,8 @@
     받는 것 = place_id, 키워드 코드·문구, 키워드별 선택 인원, 참여 인원(userCount), 방문자 리뷰 수, 수집 시각
     버리는 것 = 별점·별점 분포·테마·메뉴 등 나머지 전부. 저장 전에 집계 필드만 남긴다(리뷰 본문·닉네임·사진은 이 요청에 없음)
     블로그 리뷰 수는 이 응답에 없어 빈칸
-    요청 규칙·캐시 = match_naver_places_v0.Polite (2~3초 + 무작위, 403·429·캡차 3번 연속이면 멈춤)
+    요청 규칙 = match_naver_places_v0.Polite. 기본 간격 20초 + 무작위(최대 10초), 차단 응답은 60·120초 쉬고 3번 연속이면 멈춤
+             헤더 X-Wtm-Graphql = base64({"arg": place_id, "type": "restaurant", "source": "place"}) (브라우저 요청과 같은 형식)
 캐시: 데이터/캐시/naver_place/{place_id}.json (집계 필드만)
 출력: 데이터/가공/서울캠/naver_keyword_counts_v0.csv (커밋 금지)
 실행: ~/.venvs/maximus/bin/python -I scripts/naver/collect_naver_keyword_reviews_v0.py --limit 1
@@ -13,6 +14,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import sys
 from datetime import datetime
@@ -60,8 +62,10 @@ def fetch(client: Polite, place_id: str) -> dict:
     if path.exists():
         return json.loads(path.read_text())
     referer = f"https://pcmap.place.naver.com/restaurant/{place_id}/review/visitor"
+    wtm = base64.b64encode(json.dumps({"arg": place_id, "type": "restaurant", "source": "place"}, separators=(",", ":")).encode()).decode()
     data = client.call("POST", GRAPHQL_URL, json=payload(place_id),
-                       headers={"Content-Type": "application/json", "Origin": "https://pcmap.place.naver.com", "Referer": referer})
+                       headers={"Content-Type": "application/json", "Origin": "https://pcmap.place.naver.com", "Referer": referer,
+                                "X-Wtm-Graphql": wtm})
     stats = parse_stats(data, datetime.now().isoformat(timespec="seconds"))
     path.write_text(json.dumps(stats, ensure_ascii=False))
     return stats
@@ -78,12 +82,14 @@ def to_rows(store_id: str, s: dict) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, help="앞에서부터 N곳만(시험용)")
+    ap.add_argument("--delay", type=float, default=20.0, help="요청 간격(초)")
+    ap.add_argument("--backoff", type=float, default=30.0, help="차단 응답 뒤 쉬는 시간 기준(초, 두 배씩)")
     args = ap.parse_args()
     CACHE.mkdir(parents=True, exist_ok=True)
     m = pd.read_csv(MATCH, dtype={"store_id": str, "place_id": str})
     m = m[m.match_status.isin(["exact", "fuzzy"])]
     m = m.head(args.limit) if args.limit else m
-    client, rows, ok = Polite(), [], 0
+    client, rows, ok = Polite(args.delay, args.backoff), [], 0
     try:
         for s in m.itertuples(index=False):
             stats = fetch(client, s.place_id)

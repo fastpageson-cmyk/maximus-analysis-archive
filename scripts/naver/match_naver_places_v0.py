@@ -53,13 +53,14 @@ class Blocked(RuntimeError):
 class Polite:
     """단일 스레드 요청기: 매 요청 전 2~3초 + 무작위 지연, 차단 응답은 지수 백오프, 3번 연속이면 Blocked."""
 
-    def __init__(self) -> None:
+    def __init__(self, delay_s: float = DELAY_S, backoff_s: float = DELAY_S) -> None:
         self.session = requests.Session()
         self.fails = 0
+        self.delay_s, self.backoff_s = delay_s, backoff_s
 
     def call(self, method: str, url: str, **kw) -> dict:
         while True:
-            time.sleep(DELAY_S + random.uniform(0, JITTER_S))
+            time.sleep(self.delay_s + random.uniform(0, max(JITTER_S, self.delay_s / 2)))
             r = self.session.request(method, url, headers={**HEADERS, **kw.pop("headers", {})}, timeout=20, **kw)
             blocked = r.status_code in (403, 429) or "captcha" in r.text[:2000].lower()
             if not blocked and r.ok:
@@ -68,7 +69,8 @@ class Polite:
             self.fails += 1
             if self.fails >= MAX_FAILS:
                 raise Blocked(f"{url} {r.status_code} 연속 {self.fails}번: {r.text[:200]}")
-            time.sleep(DELAY_S * 2 ** self.fails)
+            print(f"  {r.status_code}, {self.backoff_s * 2 ** self.fails:.0f}초 쉬고 다시", flush=True)
+            time.sleep(self.backoff_s * 2 ** self.fails)
 
 
 def find_places(obj) -> list[dict]:
