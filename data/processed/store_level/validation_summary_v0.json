@@ -30,10 +30,10 @@
       "theme_coverage": "데이터 없음"
     },
     "공부": {
-      "n": 27,
+      "n": 25,
       "jaccard_with_vs_without_reviews": 1.0,
       "inertia_area_overlap": 0.0,
-      "ild_subtype": 0.886,
+      "ild_subtype": 0.847,
       "theme_coverage": "데이터 없음"
     },
     "쇼핑": {
@@ -67,9 +67,9 @@
       "max": 20.0
     },
     "deck": {
-      "near_rep": 141,
-      "random_area": 141,
-      "serendipity": 132,
+      "near_rep": 140,
+      "random_area": 140,
+      "serendipity": 130,
       "inertia_rule": 125
     },
     "baseline_mix_per_set": {

@@ -8,6 +8,7 @@
              희소도 = 1 − 상권 안 백분위(같은 상권 같은 소분류 점포 수)
     목적   = scripts/build_purpose_features.py PURPOSE_INDUSTRIES(서울시 상권분석 서비스업종 → 목적).
              상가정보 소분류·인허가 위생업태를 서비스업종으로 옮기는 대응표(SBIZ_TO_SERVICE, LICENSE_TO_SERVICE)를 거쳐 같은 표를 쓴다
+             단 스포츠강습(태권도·필라테스)은 목적을 비운다(NO_PURPOSE_SERVICES)
 출력: 데이터/가공/서울캠/seoul_store_table_v0.csv (커밋 금지)
       data/processed/store_level/match_audit_sample_v0.csv (매칭 감사 표본 50, 좌표 없음)
 실행: ~/.venvs/maximus/bin/python -I scripts/campus/서울캠/build_seoul_store_table_v0.py
@@ -79,8 +80,14 @@ LICENSE_TO_SERVICE = {
     **dict.fromkeys(["까페", "커피숍", "다방", "전통찻집", "떡카페", "아이스크림"], "커피-음료"),
     "과자점": "제과점", "제과점영업": "제과점",
 }
+# 점포 단계에서만 목적을 비우는 서비스업종. 스포츠강습(태권도·무술, 요가·필라테스)은 PATH-v0 표에서 공부지만 점포 추천에서는 뺀다(2026-11-03 팀 결정)
+NO_PURPOSE_SERVICES = {"스포츠강습"}
 COLUMNS = ["store_id", "상호", "지점명", "소분류코드", "소분류명", "목적", "area_code", "area_name", "lat", "lon", "층",
            "license_year", "license_service", "nopo", "tenure10", "old_cafe", "goodprice", "rarity", "franchise", "source"]
+
+
+def service_purpose(service: pd.Series) -> pd.Series:
+    return service.map(lambda s: None if s in NO_PURPOSE_SERVICES else map_industry_to_purpose(s))
 
 
 def load_areas() -> gpd.GeoDataFrame:
@@ -147,7 +154,7 @@ def main() -> None:
 
     stores = pd.DataFrame({
         "store_id": sbiz.상가업소번호, "상호": sbiz.상호명, "지점명": sbiz.지점명, "소분류코드": sbiz.상권업종소분류코드,
-        "소분류명": sbiz.상권업종소분류명, "목적": sbiz.상권업종소분류코드.map(SBIZ_TO_SERVICE).map(map_industry_to_purpose),
+        "소분류명": sbiz.상권업종소분류명, "목적": service_purpose(sbiz.상권업종소분류코드.map(SBIZ_TO_SERVICE)),
         "area_code": sbiz.area_code, "area_name": sbiz.area_name, "lat": sbiz.geometry.y, "lon": sbiz.geometry.x, "층": sbiz.층정보,
         "license_year": sbiz.license_year, "license_service": sbiz.license_service, "위생업태": sbiz.SNTTN_BZSTAT_NM,
         "key": sbiz.key, "source": "sbiz", "인허가상호": sbiz.BPLC_NM, "dist_m": sbiz.dist_m,
@@ -155,7 +162,7 @@ def main() -> None:
     only = lic[~lic.index.isin(pairs.right) & lic.SNTTN_BZSTAT_NM.isin(LICENSE_TO_SERVICE)]
     stores = pd.concat([stores, pd.DataFrame({
         "store_id": "L" + only.MNG_NO, "상호": only.BPLC_NM, "소분류명": only.SNTTN_BZSTAT_NM,
-        "목적": only.SNTTN_BZSTAT_NM.map(LICENSE_TO_SERVICE).map(map_industry_to_purpose),
+        "목적": service_purpose(only.SNTTN_BZSTAT_NM.map(LICENSE_TO_SERVICE)),
         "area_code": only.area_code, "area_name": only.area_name, "lat": only.geometry.y, "lon": only.geometry.x,
         "license_year": only.license_year, "license_service": only.license_service, "위생업태": only.SNTTN_BZSTAT_NM,
         "key": only.key, "source": "license_only"})], ignore_index=True)
