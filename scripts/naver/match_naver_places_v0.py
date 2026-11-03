@@ -1,10 +1,10 @@
 """P3 점포(식사·카페·공부 K=10 후보 + 관성 기준)를 네이버 플레이스 장소에 연결한다 v0.
 
-    검색   = map.naver.com instant-search, 검색어 = norm(상호) + 도로명(없으면 법정동), coords = 점포 좌표
+    검색   = map.naver.com instant-search, 검색어 = norm(상호), coords = 점포 좌표. 결과가 없으면 상호 + 도로명(없으면 법정동)
+             (자동완성 검색이라 도로명을 붙이면 오히려 못 찾는다: 2026-11-03 시험)
     판정   = 80m 안 ∧ similar(norm) → exact, 80m 안만 → fuzzy, 없으면 none. 여럿이면 exact 우선, 그다음 가까운 곳
     요청   = 쿠키·캡차 토큰 없이, 단일 스레드, 2~3초 + 무작위 지연. 403·429·캡차 응답은 지수 백오프, 3번 연속이면 멈춤
-             결과가 없으면 상호만으로 한 번 더 검색한다
-    캐시   = 데이터/캐시/naver_search/{store_id}[_name].json (검색 응답 원본, 장소 정보만 있음). 재실행하면 캐시가 있는 검색은 건너뜀
+    캐시   = 데이터/캐시/naver_search/{store_id}[_road].json (검색 응답 원본, 장소 정보만 있음). 재실행하면 캐시가 있는 검색은 건너뜀
 출력: 데이터/가공/서울캠/naver_place_match_v0.csv (커밋 금지)
       data/processed/store_level/naver_match_audit_sample_v0.csv (무작위 50곳, place_id·좌표 없음)
 실행: ~/.venvs/maximus/bin/python -I scripts/naver/match_naver_places_v0.py --limit 1   (시험은 --limit으로)
@@ -79,6 +79,7 @@ def find_places(obj) -> list[dict]:
             found.append({k: obj.get(k) for k in ["id", "title", "x", "y", "roadAddress", "ctg"]})
         for v in obj.values():
             found += find_places(v)
+        found = list({p["id"]: p for p in found}.values())
     elif isinstance(obj, list):
         for v in obj:
             found += find_places(v)
@@ -134,10 +135,10 @@ def cached_search(client: Polite, path: Path, query: str, lat: float, lon: float
 
 
 def search(client: Polite, store, debug: bool = False) -> list[dict]:
-    """정규화 상호 + 도로명으로 찾고, 없으면 상호만으로 다시 찾는다."""
-    places = cached_search(client, CACHE / f"{store.store_id}.json", store.query, store.lat, store.lon, debug)
-    if not places:
-        places = cached_search(client, CACHE / f"{store.store_id}_name.json", norm(store.상호), store.lat, store.lon, debug)
+    """정규화 상호로 찾고, 없으면 상호 + 도로명으로 다시 찾는다."""
+    places = cached_search(client, CACHE / f"{store.store_id}.json", norm(store.상호), store.lat, store.lon, debug)
+    if not places and store.query != norm(store.상호):
+        places = cached_search(client, CACHE / f"{store.store_id}_road.json", store.query, store.lat, store.lon, debug)
     return places
 
 
