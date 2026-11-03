@@ -5,6 +5,7 @@
     4   기여 = 리뷰 특성 있음/없음 상위 30 자카드, 관성 상권 겹침률, ILD(서로 다른 소분류 쌍 비율), 테마 커버리지
     5   매칭 감사 = 감사 표본의 판정 칸(맞음/틀림/애매)이 있으면 정밀도 = 맞음 ÷ (맞음 + 틀림)
     6   설문 카드 = 1세트 20장: 의외성 상위 10 + 기준선 10(대표점 가까운 순 · 상권 안 무작위 비프랜차이즈 · 관성 상권 같은 규칙)
+              카드의 접근 정보는 '상권 안 도보'(대표점 → 점포). 상권 자체는 동대문구 30분 안 후보다
               30세트, seed 42, 순서 무작위. 카드에는 방법을 숨기고 survey_cards_key_v0.csv에 따로 둔다
 출력: data/processed/store_level/survey_cards_v0.csv, survey_cards_key_v0.csv, validation_summary_v0.json
 실행: ~/.venvs/maximus/bin/python -I scripts/validate_store_serendipity_v0.py
@@ -29,8 +30,8 @@ SEED = 42
 N_SETS, N_SER, N_BASE = 30, 10, 10
 BASELINES = ["near_rep", "random_area", "inertia_rule"]
 BIAS_WARN_PP = 10
-TIME_BINS = [0, 15, 20, 25, 30]
-TIME_LABELS = ["15분 이내", "15~20분", "20~25분", "25~30분"]
+WALK_BINS = [-1, 2, 5, 10]
+WALK_LABELS = ["역·정류장 바로 앞", "도보 5분 안", "도보 5~10분"]
 
 
 def ild(kinds: pd.Series) -> float:
@@ -75,7 +76,7 @@ def cards(ser: pd.DataFrame, base: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
     deck = pd.concat([ser.assign(method="serendipity"), base], ignore_index=True)
     deck = deck.drop_duplicates(["store_id", "method"]).reset_index(drop=True)
     deck["card_id"] = [f"C{i:04d}" for i in range(len(deck))]
-    deck["도착시간 구간"] = pd.cut(deck.t_store, TIME_BINS, labels=TIME_LABELS).astype(str)
+    deck["상권 안 도보"] = pd.cut(deck.walk_from_rep, WALK_BINS, labels=WALK_LABELS).astype(str)
     deck["reason"] = [reason(r, {t: r[f"t_{t}"] for t in THEMES}) for _, r in deck.iterrows()]
     rng = np.random.default_rng(SEED)
     sets = []
@@ -91,7 +92,7 @@ def cards(ser: pd.DataFrame, base: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
             pick += chosen
         order = rng.permutation(len(pick))
         sets += [{"set_id": s, "order": o + 1, "card_id": deck.at[pick[i], "card_id"]} for o, i in enumerate(order)]
-    sets = pd.DataFrame(sets).merge(deck[["card_id", "상호", "소분류명", "area_name", "도착시간 구간", "reason"]], on="card_id")
+    sets = pd.DataFrame(sets).merge(deck[["card_id", "상호", "소분류명", "area_name", "상권 안 도보", "reason"]], on="card_id")
     key = deck[["card_id", "method", "purpose"]]
     return sets.sort_values(["set_id", "order"]), key
 

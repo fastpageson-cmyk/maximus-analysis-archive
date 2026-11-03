@@ -1,12 +1,15 @@
-"""의외성 상위 상권 안 점포 후보와 점포별 도착 시간(서울캠 출발) v0.
+"""의외성 상위 상권 안 점포 후보와 점포 접근성 판정 v0.
 
     상권   = SERP-v0 serendipity_ranking_latest.csv 목적별 MMR 상위 K(기본 10, 민감도 20·eligible 전체)
     gate   = 점포 목적 = 해당 목적 ∧ 비프랜차이즈 (영업 중은 점포 테이블 v0에서 이미 거름)
-    도착   = t_store = t_area − walk(하차점→상권 대표점) + walk(하차점→점포), walk = 직선 × 1.3 ÷ 시속 4km
+    출발점 = 동대문구(SERP-v0·PATH-v0와 같음, 2026-11-03 팀 결정). 상권은 이미 동대문구 출발지 25% 이상이 30분 안에 닿는 곳이다
+             점포 판정은 상권 대표점 → 점포 도보 시간(walk_from_rep): ≤5분 안정, 5~10분 경계, >10분 제외 → reach_flag
+    참고   = 서울캠 출발 t_store_seoulcampus (seoulcampus_flag ≤25 안정, 25~30 경계, >30 제외)
+             t_store = t_area − walk(하차점→상권 대표점) + walk(하차점→점포), walk = 직선 × 1.3 ÷ 시속 4km
              t_area: 서울캠 ODsay 캐시(측정)가 있으면 최단 totalTime, 없으면 캐시로 맞춘 직선거리 회귀(추정). ODsay는 새로 부르지 않는다
              하차점: 캐시 경로의 마지막 탑승 구간 끝 좌표, 추정 상권은 대표점에서 가장 가까운 버스 정류소·지하철역
              직선 1km 안 상권은 걷는 쪽이 더 빠르면 걸어간다(하차점 = 캠퍼스, build_seoulcampus_recommendations_v1.py와 같은 규칙)
-    표시   = reach_flag ≤25 안정, 25~30 경계, >30 제외. wait_risk는 seoulcampus_areas_reach_v1.csv 값
+             wait_risk는 seoulcampus_areas_reach_v1.csv 값
     관성   = inertia_baselines_top10.csv 상권마다 식사·카페 점포 최대 50곳 무작위(seed 42, 상권마다 한 번 뽑아 목적끼리 같이 씀)
 출력: 데이터/가공/서울캠/store_candidates_v0.csv (커밋 금지)
 실행: ~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v0.py
@@ -33,7 +36,8 @@ PURPOSES = ["식사", "카페", "공부", "쇼핑", "여가문화"]
 K, K_SENS = 10, 20
 DETOUR, WALK_KMH = 1.3, 4.0
 WALK_COMPARE_KM = 1.0
-STABLE_MIN, REACH_MIN = 25, 30
+STABLE_MIN, REACH_MIN = 25, 30      # 서울캠 출발(참고)
+REP_STABLE_MIN, REP_MAX_MIN = 5, 10  # 상권 대표점 → 점포 도보(판정)
 INERTIA_PURPOSES = {"식사", "카페"}
 INERTIA_PER_AREA = 50
 SEED = 42
@@ -51,8 +55,8 @@ def store_time(t_area, alight_lat, alight_lon, rep_lat, rep_lon, lat, lon) -> np
     return t_area - walk_min(alight_lat, alight_lon, rep_lat, rep_lon) + walk_min(alight_lat, alight_lon, lat, lon)
 
 
-def reach_flag(t: pd.Series) -> pd.Series:
-    return pd.Series(np.select([t <= STABLE_MIN, t <= REACH_MIN], ["안정", "경계"], "제외"), index=t.index)
+def reach_flag(t: pd.Series, stable: float = STABLE_MIN, limit: float = REACH_MIN) -> pd.Series:
+    return pd.Series(np.select([t <= stable, t <= limit], ["안정", "경계"], "제외"), index=t.index)
 
 
 def gate(stores: pd.DataFrame, purpose: str) -> pd.Series:
@@ -114,7 +118,7 @@ def main() -> None:
     inertia = pd.read_csv(DATA / "serendipity_ranking/inertia_baselines_top10.csv", dtype={"area_code": str})
     reach = area_reach()
 
-    rank = rank[rank.eligible.astype(bool)][["purpose", "area_code", "mmr_rank", "score_rank"]]
+    rank = rank[rank.eligible.astype(bool)][["purpose", "area_code", "mmr_rank", "score_rank", "mean_period_ratio"]]
     cand = pd.concat([rank[rank.purpose.eq(p)].merge(stores[gate(stores, p)], on="area_code") for p in PURPOSES], ignore_index=True)
     cand = cand.assign(group="candidate", in_k10=cand.mmr_rank.le(K), in_k20=cand.mmr_rank.le(K_SENS))
 
@@ -124,9 +128,12 @@ def main() -> None:
     ref = inertia_areas.merge(sampled, on="area_code").assign(group="inertia_ref")
 
     out = pd.concat([cand, ref], ignore_index=True).merge(reach, on="area_code", how="left")
-    out["t_store"] = store_time(out.t_area, out.alight_lat, out.alight_lon, out.rep_lat, out.rep_lon, out.lat, out.lon).round(1)
-    out["reach_flag"] = reach_flag(out.t_store)
-    lead = ["group", "purpose", "area_code", "store_id", "t_store", "reach_source", "reach_flag", "wait_risk", "mmr_rank", "in_k10", "in_k20", "t_area"]
+    out["walk_from_rep"] = walk_min(out.rep_lat, out.rep_lon, out.lat, out.lon).round(1)
+    out["reach_flag"] = reach_flag(out.walk_from_rep, REP_STABLE_MIN, REP_MAX_MIN)
+    out["t_store_seoulcampus"] = store_time(out.t_area, out.alight_lat, out.alight_lon, out.rep_lat, out.rep_lon, out.lat, out.lon).round(1)
+    out["seoulcampus_flag"] = reach_flag(out.t_store_seoulcampus)
+    lead = ["group", "purpose", "area_code", "store_id", "walk_from_rep", "reach_flag", "mean_period_ratio", "mmr_rank", "in_k10", "in_k20",
+            "t_store_seoulcampus", "seoulcampus_flag", "reach_source", "wait_risk", "t_area"]
     p2 = [c for c in stores.columns if c not in lead]
     out[lead + p2].to_csv(OUT / "store_candidates_v0.csv", index=False, encoding="utf-8-sig")
     report(out)
@@ -139,7 +146,9 @@ def report(out: pd.DataFrame) -> None:
     k = c[c.in_k10]
     per = k.groupby(["purpose", "area_code"]).size()
     print("K=10 상권당 후보 수(목적·상권):", per.groupby("purpose").agg(["median", "min", "max"]).to_dict("index"))
-    print("K=10 reach_flag 비율:", k.reach_flag.value_counts(normalize=True).round(3).to_dict(), "reach_source:", k.drop_duplicates("area_code").reach_source.value_counts().to_dict())
+    print("K=10 reach_flag(대표점 도보) 비율:", k.reach_flag.value_counts(normalize=True).round(3).to_dict(),
+          "| 참고 seoulcampus_flag:", k.seoulcampus_flag.value_counts(normalize=True).round(3).to_dict())
+    print("K=10 대표점 도보 분위:", k.walk_from_rep.quantile([.5, .9, 1]).round(1).tolist())
     print("K=10 목적별 reach_flag:", k.groupby("purpose").reach_flag.value_counts(normalize=True).round(2).unstack().to_dict("index"))
     r = out[out.group.eq("inertia_ref")]
     print(f"관성 기준 점포 {len(r):,} 행, 고유 {r.store_id.nunique():,}, 상권 {r.area_code.nunique()}")

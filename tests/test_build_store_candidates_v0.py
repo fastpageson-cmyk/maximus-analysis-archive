@@ -33,3 +33,10 @@ def test_gate_keeps_same_purpose_non_franchise_only():
     stores = pd.DataFrame({"목적": ["식사", "식사", "카페", None], "franchise": [False, True, False, False]})
     assert gate(stores, "식사").tolist() == [True, False, False, False]
     assert gate(stores, "카페").tolist() == [False, False, True, False]
+
+
+def test_reach_flag_from_rep_walk_uses_5_and_10_minutes():
+    from scripts.build_store_candidates_v0 import REP_MAX_MIN, REP_STABLE_MIN, reach_flag
+
+    flags = reach_flag(pd.Series([0, 5, 5.1, 10, 10.1]), REP_STABLE_MIN, REP_MAX_MIN)
+    assert flags.tolist() == ["안정", "안정", "경계", "경계", "제외"]
