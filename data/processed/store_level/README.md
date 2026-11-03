@@ -69,3 +69,12 @@
 
 `match_audit_sample_v0.csv`: 인허가가 매칭된 상가정보 점포 50곳(무작위, seed 42). 좌표는 없다.
 열: 상호, 소분류명, 인허가 상호, 인허가 연도, 거리_m, 판정. **판정 칸은 사람이 채운다**(맞음 / 틀림 / 애매).
+
+## 네이버 장소 연결·키워드 집계 v0 (로컬)
+
+`scripts/naver/match_naver_places_v0.py` → `collect_naver_keyword_reviews_v0.py` 순서로 돌린다. 대상은 식사·카페·공부 K=10 후보와 관성 기준 점포를 합친 3,252곳이다.
+
+- 장소 연결: `map.naver.com/p/api/search/instant-search`(검색어 = 정규화 상호 + 도로명, coords = 점포 좌표). 80m 안이고 상호가 비슷하면 exact, 80m 안이기만 하면 fuzzy, 없으면 none.
+- 키워드 집계: `pcmap-api.place.naver.com/graphql`의 `getVisitorReviewStats`. 키워드 코드·문구·선택 인원, 참여 인원(`userCount`), 방문자 리뷰 수만 저장한다. 별점·메뉴·리뷰 본문은 저장하지 않는다. 블로그 리뷰 수는 이 응답에 없다.
+- 요청: 쿠키·캡차 토큰을 보내지 않는다. 단일 스레드로 2~3초 + 무작위 지연을 두고, 403·429·캡차 응답이 3번 연속이면 멈춘다. 캐시(`데이터/캐시/naver_search`, `naver_place`)가 있는 곳은 건너뛴다.
+- 결과 CSV, 캐시, place_id는 커밋하지 않는다. 공개 파일은 `naver_match_audit_sample_v0.csv`(place_id·좌표 없음)뿐이다.
