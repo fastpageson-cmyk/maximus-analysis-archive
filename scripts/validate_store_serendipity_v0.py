@@ -23,8 +23,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_store_candidates_v0 import area_reach, walk_min  # noqa: E402
-from build_store_serendipity_v0 import (BASE_W, OUT, PUBLIC, PURPOSES, THEMES, add_review_terms, load, mmr,  # noqa: E402
-                                        rank, reason, score)
+from build_store_serendipity_v0 import (BASE_W, OUT, PUBLIC, PURPOSES, RARE_REASON, THEMES, add_review_terms, load,  # noqa: E402
+                                        mmr, rank, reason, score)
 
 SEED = 42
 N_SETS, N_SER, N_BASE = 30, 10, 10
@@ -40,15 +40,19 @@ def ild(kinds: pd.Series) -> float:
 
 
 def precision(path: Path) -> dict:
+    """사람 판정(판정)이 있으면 그것을, 없으면 Claude 1차 판정(판정_claude)을 쓴다. 애매를 틀림으로 본 보수적 정밀도도 함께."""
     if not path.exists():
         return {"status": "파일 없음"}
     a = pd.read_csv(path)
-    j = a["판정"].fillna("").astype(str).str.strip()
-    done = j.isin(["맞음", "틀림", "애매"])
-    if not done.any():
-        return {"status": "검수 필요", "n": len(a)}
-    right, wrong = int(j.eq("맞음").sum()), int(j.eq("틀림").sum())
-    return {"status": "검수됨", "n_judged": int(done.sum()), "precision": round(right / (right + wrong), 3) if right + wrong else None}
+    for col, status in [("판정", "사람 검수"), ("판정_claude", "Claude 1차 판정(사람 검수 전)")]:
+        j = a.get(col, pd.Series(dtype=str)).fillna("").astype(str).str.strip()
+        done = j.isin(["맞음", "틀림", "애매"])
+        if done.any():
+            right, wrong = int(j.eq("맞음").sum()), int(j.eq("틀림").sum())
+            return {"status": status, "n_judged": int(done.sum()), "counts": j[done].value_counts().to_dict(),
+                    "precision": round(right / (right + wrong), 3) if right + wrong else None,
+                    "precision_conservative": round(right / int(done.sum()), 3)}
+    return {"status": "검수 필요", "n": len(a)}
 
 
 def baselines(c: pd.DataFrame, vec_cols: list[str], picked_areas: pd.DataFrame) -> pd.DataFrame:
@@ -93,7 +97,9 @@ def cards(ser: pd.DataFrame, base: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
         order = rng.permutation(len(pick))
         sets += [{"set_id": s, "order": o + 1, "card_id": deck.at[pick[i], "card_id"]} for o, i in enumerate(order)]
     sets = pd.DataFrame(sets).merge(deck[["card_id", "상호", "소분류명", "area_name", "상권 안 도보", "reason"]], on="card_id")
-    key = deck[["card_id", "method", "purpose"]]
+    # 공공 태그가 이유 문장에 있는지(방법마다 비율이 달라 분석 때 공변량으로 넣는다)
+    deck["has_tag"] = deck.nopo | deck.tenure10 | deck.goodprice | deck.rarity.ge(RARE_REASON)
+    key = deck[["card_id", "method", "purpose", "has_tag"]]
     return sets.sort_values(["set_id", "order"]), key
 
 
@@ -132,6 +138,7 @@ def main() -> None:
     key.to_csv(PUBLIC / "survey_cards_key_v0.csv", index=False, encoding="utf-8-sig")
     summary["6_survey"] = {"sets": int(sets.set_id.nunique()), "cards_per_set": sets.groupby("set_id").size().describe()[["min", "max"]].to_dict(),
                            "deck": key.method.value_counts().to_dict(),
+                           "has_tag_by_method": key.groupby("method").has_tag.mean().round(2).to_dict(),
                            "baseline_mix_per_set": sets.merge(key, on="card_id").groupby(["set_id", "method"]).size().unstack(fill_value=0).mean().round(2).to_dict()}
     (PUBLIC / "validation_summary_v0.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2, default=str))
     print(json.dumps(summary, ensure_ascii=False, indent=2, default=str))

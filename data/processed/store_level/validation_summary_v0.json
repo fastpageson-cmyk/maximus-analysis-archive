@@ -53,8 +53,14 @@
   },
   "5_match_audit": {
     "license": {
-      "status": "검수 필요",
-      "n": 50
+      "status": "Claude 1차 판정(사람 검수 전)",
+      "n_judged": 50,
+      "counts": {
+        "맞음": 47,
+        "애매": 3
+      },
+      "precision": 1.0,
+      "precision_conservative": 0.94
     },
     "naver": {
       "status": "파일 없음"
@@ -71,6 +77,12 @@
       "random_area": 140,
       "serendipity": 130,
       "inertia_rule": 125
+    },
+    "has_tag_by_method": {
+      "inertia_rule": 0.76,
+      "near_rep": 0.23,
+      "random_area": 0.23,
+      "serendipity": 0.75
     },
     "baseline_mix_per_set": {
       "inertia_rule": 3.3,
