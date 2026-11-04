@@ -1,6 +1,6 @@
 # 의외성(세렌디피티) 추천 설계 — SERP-v0
 
-작성: 김건우 / 2026-11-02 / 브랜치 `codex/gunwoo/serendipity-ranking`
+작성: 김건우 / 2026-11-02 / 브랜치 `gunwoo/serendipity`
 
 - 코드: `scripts/build_serendipity_ranking.py`
 - 테스트: `tests/test_build_serendipity_ranking.py`

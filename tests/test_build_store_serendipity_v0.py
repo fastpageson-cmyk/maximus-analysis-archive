@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from scripts.build_store_serendipity_v0 import BASE_W, THEMES, rank, shrunk_lift
+from scripts.store_level.build_store_serendipity_v0 import BASE_W, THEMES, rank, shrunk_lift
 
 VEC = [f"t_{t}" for t in THEMES]
 

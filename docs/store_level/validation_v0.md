@@ -1,7 +1,7 @@
 # 점포 단위 의외성 v0 검증
 
-기준일: 2026-11-03 · 브랜치 `codex/gunwoo/store-level-recommendation-options`
-설계: `docs/store_level_recommendation_options.md` 4.2·6.6절 · 스크립트 `scripts/validate_store_serendipity_v0.py` · 숫자 원본 `data/processed/store_level/validation_summary_v0.json`
+기준일: 2026-11-03 · 브랜치 `gunwoo/store-level`
+설계: `docs/store_level/recommendation_options.md` 4.2·6.6절 · 스크립트 `scripts/store_level/validate_store_serendipity_v0.py` · 숫자 원본 `data/processed/store_level/validation_summary_v0.json`
 
 ## 먼저 알아 둘 것: v0는 공공데이터판이다
 네이버 키워드 집계 요청(`getVisitorReviewStats`)은 캡차 토큰 없이 보내면 첫 요청부터 429가 온다(2026-11-03, 헤더 형식을 맞추고 간격을 20초 이상으로 늘려도 같음). 캡차 토큰을 재사용하는 수집은 하지 않았다. 장소 검색(instant-search)은 토큰 없이 된다.

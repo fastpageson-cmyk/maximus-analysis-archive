@@ -1,8 +1,8 @@
 # 점포 단위 추천 v1 변경 사항
 
-기준일: 2026-11-03 · 브랜치 `codex/gunwoo/store-level-v1-fixes`(`codex/gunwoo/store-level-recommendation-options`에서 분기)
+기준일: 2026-11-03 · 브랜치 `gunwoo/store-level`(`gunwoo/store-level`에서 분기)
 규칙 모듈: `scripts/campus/서울캠/store_rules_v1.py` · 테스트: `tests/test_store_rules_v1.py`
-로컬 실행: `docs/store_level_v1_local_run.md`
+로컬 실행: `docs/prompts/store_level_v1_local_run.md`
 
 > 이 문서의 영향 숫자는 **v1 결과가 아니다.** 공개 v0 목록(`store_serendipity_top30_v0.csv`, `survey_cards_v0.csv`)에 새 규칙을 덧씌워 본 사전 추정이다. 원천(상가정보·인허가)과 점포 테이블은 로컬 Mac에만 있어서, 이 세션에서는 파이프라인을 다시 돌리지 못했다.
 
@@ -99,7 +99,7 @@ v0 상위 목록에서 문제 세 가지가 보였다.
 
 ## 3. 사전 영향 추정 (v0 목록 기준, v1 결과 아님)
 
-`scripts/estimate_store_rules_v1_impact.py`를 공개 v0 CSV에 돌렸다. 가게별 판정: `data/processed/store_level/store_rules_v1_preimpact_top30.csv`, `store_rules_v1_preimpact_cards.csv`.
+`scripts/store_level/estimate_store_rules_v1_impact.py`를 공개 v0 CSV에 돌렸다. 가게별 판정: `data/processed/store_level/store_rules_v1_preimpact_top30.csv`, `store_rules_v1_preimpact_cards.csv`.
 
 추정의 한계:
 - 공개 CSV에는 소분류코드와 매칭 위생업태가 없다. 소분류명 → 서비스업종은 스크립트 안 `NAME_TO_SERVICE`로 옮겼고, **인허가 위생업태 우선 규칙은 적용하지 못했다.**
@@ -151,11 +151,11 @@ v0 상위 목록에서 문제 세 가지가 보였다.
 |---|---|---|
 | 규칙 | `scripts/campus/서울캠/store_rules_v1.py` | 상수·함수만, 원천 안 읽음 |
 | 점포 테이블 | `scripts/campus/서울캠/build_seoul_store_table_v1.py` → `데이터/가공/서울캠/seoul_store_table_v1.csv` | 커밋 금지 |
-| 후보 | `scripts/build_store_candidates_v1.py` → `store_candidates_v1.csv` | 커밋 금지. 계산은 v0 `main("v1")` |
-| 점수 | `scripts/build_store_serendipity_v1.py` → `store_serendipity_v1.csv`(로컬), `store_serendipity_top30_v1.csv`·`store_serendipity_sensitivity_v1.csv`(공개) | top30에 `category_source` 열 추가 |
-| 검증·카드 | `scripts/validate_store_serendipity_v1.py` → `survey_cards_v1.csv`, `survey_cards_key_v1.csv`, `validation_summary_v1.json` | |
-| 비교 | `scripts/compare_store_serendipity_v0_v1.py` → `store_serendipity_v0_v1_compare.md` | 공개 CSV만 읽음 |
-| 사전 추정 | `scripts/estimate_store_rules_v1_impact.py` → `store_rules_v1_preimpact_*.csv` | v0 공개 CSV 기준 |
+| 후보 | `scripts/store_level/build_store_candidates_v1.py` → `store_candidates_v1.csv` | 커밋 금지. 계산은 v0 `main("v1")` |
+| 점수 | `scripts/store_level/build_store_serendipity_v1.py` → `store_serendipity_v1.csv`(로컬), `store_serendipity_top30_v1.csv`·`store_serendipity_sensitivity_v1.csv`(공개) | top30에 `category_source` 열 추가 |
+| 검증·카드 | `scripts/store_level/validate_store_serendipity_v1.py` → `survey_cards_v1.csv`, `survey_cards_key_v1.csv`, `validation_summary_v1.json` | |
+| 비교 | `scripts/store_level/compare_store_serendipity_v0_v1.py` → `store_serendipity_v0_v1_compare.md` | 공개 CSV만 읽음 |
+| 사전 추정 | `scripts/store_level/estimate_store_rules_v1_impact.py` → `store_rules_v1_preimpact_*.csv` | v0 공개 CSV 기준 |
 
 v0 스크립트는 지우지 않았다. `build_store_candidates_v0.py`, `build_store_serendipity_v0.py`, `validate_store_serendipity_v0.py`의 `main()`·`load()` 등에 `tag="v0"` 인자를 더했을 뿐이고, 인자 없이 돌리면 v0와 같은 파일을 같은 내용으로 만든다.
 

@@ -9,7 +9,7 @@
              S = serendipity_score × s_store, 목적별 30곳, 상권당 최대 3곳, reach_flag=제외는 MMR 전에 뺀다
 출력: 데이터/가공/서울캠/store_serendipity_v0.csv (전체 열, 커밋 금지)
       data/processed/store_level/store_serendipity_top30_v0.csv, store_serendipity_sensitivity_v0.csv
-실행: ~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v0.py
+실행: ~/.venvs/maximus/bin/python -I scripts/store_level/build_store_serendipity_v0.py
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 ROOT = Path(os.environ["MAXIMUS_WORKSPACE"]) if "MAXIMUS_WORKSPACE" in os.environ else next((p for p in REPO.parents if (p / "데이터").is_dir()), REPO.parent)
 OUT = ROOT / "데이터/가공/서울캠"
 PUBLIC = REPO / "data/processed/store_level"

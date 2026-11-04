@@ -2,7 +2,7 @@
 
 원천(상가정보·인허가)과 점포 테이블은 사용자 Mac에만 있다. 아래 블록을 Mac의 로컬 에이전트(Claude Code·Codex 등)에 **그대로** 붙여 넣는다. 블록 하나로 끝까지 진행된다.
 
-변경 내용: `docs/store_level_v1_changes.md` · 열 설명: `data/processed/store_level/README.md` v1 절
+변경 내용: `docs/store_level/v1_changes.md` · 열 설명: `data/processed/store_level/README.md` v1 절
 
 ````text
 너는 막시무스 프로젝트 저장소(maximus-analysis-archive)에서 점포 단위 추천 v1을 로컬 데이터로 다시 만든다. 답과 보고는 한국어로 짧게 한다.
@@ -10,8 +10,8 @@
 ## 0. 준비
 1. 저장소 루트로 이동한다. 작업 폴더(저장소의 상위 어딘가)에 `데이터/원천/서울캠`, `데이터/가공/서울캠`이 있어야 한다. 없으면 멈추고 알려라.
 2. 브랜치를 받는다.
-   git fetch origin codex/gunwoo/store-level-v1-fixes
-   git checkout -B codex/gunwoo/store-level-v1-fixes origin/codex/gunwoo/store-level-v1-fixes
+   git fetch origin gunwoo/store-level
+   git checkout -B gunwoo/store-level origin/gunwoo/store-level
    git status  # 깨끗해야 한다. 커밋 안 된 변경이 있으면 멈추고 알려라
 3. 파이썬은 ~/.venvs/maximus/bin/python 만 쓴다. 테스트를 먼저 돌린다(테스트는 -I 없이, 저장소 루트에서).
    ~/.venvs/maximus/bin/python -m pytest -q
@@ -19,10 +19,10 @@
 
 ## 1. v1 파이프라인 (순서대로, 각 로그를 /tmp/maximus_v1_<단계>.log 로도 남긴다)
    ~/.venvs/maximus/bin/python -I scripts/campus/서울캠/build_seoul_store_table_v1.py      2>&1 | tee /tmp/maximus_v1_table.log
-   ~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v1.py                       2>&1 | tee /tmp/maximus_v1_candidates.log
-   ~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v1.py                      2>&1 | tee /tmp/maximus_v1_serendipity.log
-   ~/.venvs/maximus/bin/python -I scripts/validate_store_serendipity_v1.py                   2>&1 | tee /tmp/maximus_v1_validate.log
-   ~/.venvs/maximus/bin/python -I scripts/compare_store_serendipity_v0_v1.py                 2>&1 | tee /tmp/maximus_v1_compare.log
+   ~/.venvs/maximus/bin/python -I scripts/store_level/build_store_candidates_v1.py                       2>&1 | tee /tmp/maximus_v1_candidates.log
+   ~/.venvs/maximus/bin/python -I scripts/store_level/build_store_serendipity_v1.py                      2>&1 | tee /tmp/maximus_v1_serendipity.log
+   ~/.venvs/maximus/bin/python -I scripts/store_level/validate_store_serendipity_v1.py                   2>&1 | tee /tmp/maximus_v1_validate.log
+   ~/.venvs/maximus/bin/python -I scripts/store_level/compare_store_serendipity_v0_v1.py                 2>&1 | tee /tmp/maximus_v1_compare.log
 - 오류가 나면 원인을 찾아 최소한으로 고치고, 무엇을 왜 고쳤는지 보고에 적는다.
 - `scripts/campus/서울캠/store_rules_v1.py`의 규칙 상수(키워드·제외 목록·BOUNDARY_SUBTYPES·STUDY_INCLUDE_BOOKS)는 바꾸지 마라. 이상해 보이면 보고에 제안만 적는다.
 - v0 파일·스크립트는 지우거나 덮어쓰지 마라. v1 스크립트는 `_v1` 파일만 쓴다.
@@ -54,8 +54,8 @@ data/processed/store_level/store_serendipity_v0_v1_compare.md(스크립트가 �
    - 설문 카드 덱: 방법별(serendipity / near_rep / random_area / inertia_rule) 카드 수와 공공 태그 없는 카드 비율 v0 → v1
    - validation_summary_v1.json의 4_contribution(ILD, 관성 상권 겹침률)과 6_survey(has_tag_by_method)를 v0와 나란히
    - 민감도 store_serendipity_sensitivity_v1.csv 자카드 범위(가중치 ±0.1, K=20)를 v0와 나란히
-   - 사전 추정(docs/store_level_v1_changes.md 3절)과 실제가 다른 곳
-이 내용을 docs/store_level_v1_changes.md 맨 끝에 '## 6. 로컬 실행 결과 (YYYY-MM-DD)' 절로 추가한다. 3절의 사전 추정은 지우지 말고 그대로 둔다.
+   - 사전 추정(docs/store_level/v1_changes.md 3절)과 실제가 다른 곳
+이 내용을 docs/store_level/v1_changes.md 맨 끝에 '## 6. 로컬 실행 결과 (YYYY-MM-DD)' 절로 추가한다. 3절의 사전 추정은 지우지 말고 그대로 둔다.
 data/processed/store_level/README.md v1 절의 '### v1 한계' 위에 '### v1 실행 결과' 몇 줄(목적별 추천 수, 제외 사유 분포 요약)을 넣는다.
 
 ## 4. 커밋 규칙
@@ -67,7 +67,7 @@ data/processed/store_level/README.md v1 절의 '### v1 한계' 위에 '### v1 �
   data/processed/store_level/validation_summary_v1.json
   data/processed/store_level/store_serendipity_v0_v1_compare.md
   data/processed/store_level/category_fix_audit_sample_v1.csv
-  docs/store_level_v1_changes.md, data/processed/store_level/README.md
+  docs/store_level/v1_changes.md, data/processed/store_level/README.md
   (1단계에서 코드를 고쳤다면 그 스크립트)
 - 절대 커밋 금지: 데이터/ 아래 전부(원천·가공 점포 테이블 seoul_store_table_v*.csv, store_candidates_v*.csv, store_serendipity_v*.csv), 캐시(ODsay·네이버), API 키·.env, 좌표(lat/lon)·store_id·place_id가 든 파일.
 - add 뒤 `git diff --cached --stat` 로 파일 목록을 보고, 올라가는 CSV마다 첫 줄(열 이름)에 lat·lon·store_id·place_id·area_code가 없는지 확인한다.
@@ -76,7 +76,7 @@ data/processed/store_level/README.md v1 절의 '### v1 한계' 위에 '### v1 �
   feat(store-level): <무엇>   ← 산출물·코드 (예: feat(store-level): v1 상위 30·설문 카드 재생성)
   docs(store-level): <무엇>   ← 문서 (예: docs(store-level): v1 로컬 실행 결과 기록)
   산출물과 문서는 커밋을 나눈다. 파일명·메시지에 final 을 쓰지 않는다.
-- git push -u origin codex/gunwoo/store-level-v1-fixes. 네트워크 오류면 2·4·8·16초 간격으로 4번까지 다시 시도한다. PR은 만들지 않는다.
+- git push -u origin gunwoo/store-level. 네트워크 오류면 2·4·8·16초 간격으로 4번까지 다시 시도한다. PR은 만들지 않는다.
 
 ## 5. 마지막 보고 (이 순서로, 짧게)
 1. 커밋 해시와 메시지

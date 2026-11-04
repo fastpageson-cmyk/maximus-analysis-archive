@@ -5,7 +5,7 @@
            인허가 위생업태 우선 규칙은 적용하지 못한다(license_only 점포는 소분류명이 곧 위생업태라 상호 규칙만 본다).
            빠진 자리를 v1에서 어떤 가게가 채우는지, 희소도 재계산으로 순위가 어떻게 바뀌는지는 알 수 없다
 출력: data/processed/store_level/store_rules_v1_preimpact_top30.csv, store_rules_v1_preimpact_cards.csv (가게별 판정)
-실행: MAXIMUS_WORKSPACE=<'데이터' 하위 폴더가 있는 폴더> python -I scripts/estimate_store_rules_v1_impact.py
+실행: MAXIMUS_WORKSPACE=<'데이터' 하위 폴더가 있는 폴더> python -I scripts/store_level/estimate_store_rules_v1_impact.py
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pandas as pd
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "scripts/campus/서울캠"))
 import store_rules_v1 as rules  # noqa: E402
 from build_seoul_store_table_v0 import LICENSE_TO_SERVICE  # noqa: E402

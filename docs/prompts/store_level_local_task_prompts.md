@@ -1,6 +1,6 @@
 # 점포 단위 추천: 로컬 작업 프롬프트
 
-작성: 2026-11-03 · 설계: `docs/store_level_recommendation_options.md`(안 B + 6장 키워드 리뷰)
+작성: 2026-11-03 · 설계: `docs/store_level/recommendation_options.md`(안 B + 6장 키워드 리뷰)
 
 로컬 에이전트(Claude Code·Codex)에 **순서대로 하나씩** 넣는다. 각 프롬프트는 앞 단계 결과를 전제한다. 모든 단계에 아래 공통 규칙을 붙인다.
 
@@ -8,7 +8,7 @@
 
 ```
 [공통 규칙]
-- 저장소: maximus-analysis-archive. 기준 브랜치 codex/gunwoo/store-level-recommendation-options. 설계 문서 docs/store_level_recommendation_options.md를 먼저 읽을 것.
+- 저장소: maximus-analysis-archive. 기준 브랜치 gunwoo/store-level. 설계 문서 docs/store_level/recommendation_options.md를 먼저 읽을 것.
 - 작업 폴더 구조: <작업 폴더>/데이터/{원천,캐시,가공}. 저장소가 작업 폴더 안에 있으면 자동 탐색, 아니면 MAXIMUS_WORKSPACE=<작업 폴더>.
 - 공개 저장소다. 원천 데이터, API 응답 캐시, 네이버 수집 원본·집계, 키를 커밋하지 말 것. 키는 ~/.config/maximus/keys.env 환경변수로만 읽는다.
 - 카카오 API 응답(이름·주소·좌표)은 저장해 다시 쓰지 않는다. 좌표는 인허가·상가정보 원본 또는 공공 지오코더(도로명주소 API, 브이월드)만 쓴다.
@@ -81,7 +81,7 @@
 ```
 목표: SERP-v0 상위 상권 안에서 gate를 통과한 점포 후보와 점포별 도착 시간을 만든다.
 
-스크립트: scripts/build_store_candidates_v0.py
+스크립트: scripts/store_level/build_store_candidates_v0.py
 입력: seoul_store_table_v0.csv, data/processed/serendipity_ranking/serendipity_ranking_latest.csv(목적별 eligible·mmr_rank), inertia_baselines_top10.csv, 서울캠 seoulcampus_areas_reach_v1.csv(측정 상권 도착 시간)
 처리:
 1. 목적별 MMR 상위 K=10 상권(민감도 K=20, 그리고 R ≥ 0.6 전체)의 점포를 고른다.
@@ -98,7 +98,7 @@
 ## P4. 네이버 장소 연결과 키워드 리뷰 수집 (2~3일)
 
 ```
-목표: P3 점포(후보 + 관성 기준, 약 3,000곳)에 네이버 플레이스를 연결하고, 키워드 리뷰 집계만 수집한다. 설계는 docs/store_level_recommendation_options.md 6.1~6.2절.
+목표: P3 점포(후보 + 관성 기준, 약 3,000곳)에 네이버 플레이스를 연결하고, 키워드 리뷰 집계만 수집한다. 설계는 docs/store_level/recommendation_options.md 6.1~6.2절.
 
 스크립트: scripts/naver/match_naver_places_v0.py, scripts/naver/collect_naver_keyword_reviews_v0.py
 수집 규칙:
@@ -130,7 +130,7 @@
 ```
 목표: 설계 6.4~6.5절대로 가게 성격 벡터와 점포 점수를 만들고 최종 추천 목록을 낸다.
 
-스크립트: scripts/build_store_serendipity_v0.py (+ tests/test_build_store_serendipity_v0.py)
+스크립트: scripts/store_level/build_store_serendipity_v0.py (+ tests/test_build_store_serendipity_v0.py)
 1. 비율 p = c / n, 경험적 베이즈 축소 m = 20(민감도 10·40), 업종(소분류) 평균 μ 대비 lift ℓ = log(p̃/μ), 테마 점수 t = 업종 내 비중 가중 합.
 2. n < 20이면 v = 0, review_evidence = low. 제외하지 말 것.
 3. fit = 목적별 테마 가중(6.5절 a 표) → 백분위. r_store = 0.4·pct(영업연수|소분류) + 0.2·지정 + 0.4·pct(fit). 근거 부족이면 fit 0.5.
@@ -157,5 +157,5 @@
 5. 설문 카드: 응답자당 20장(의외성 10 + 기준선 10: 상권 안 가까운 순, 상권 안 무작위 비프랜차이즈, 관성 상권 상위). 순서는 무작위, 출처는 숨긴다.
    문항: Q1 아는 곳인가(가 봄/들어 봄/처음), Q2 평소 떠올렸을 곳인가(1~5), Q3 가 보고 싶은가(1~5), Q4 가 본 경우 카드 특징이 맞나(예/아니오).
    구글폼에 넣을 수 있는 CSV로 낸다.
-6. 결과를 docs/store_level_validation_v0.md에 숫자로 정리하고 커밋한다.
+6. 결과를 docs/store_level/validation_v0.md에 숫자로 정리하고 커밋한다.
 ```

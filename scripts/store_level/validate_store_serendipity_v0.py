@@ -8,7 +8,7 @@
               카드의 접근 정보는 '상권 안 도보'(대표점 → 점포). 상권 자체는 동대문구 30분 안 후보다
               30세트, seed 42, 순서 무작위. 카드에는 방법을 숨기고 survey_cards_key_v0.csv에 따로 둔다
 출력: data/processed/store_level/survey_cards_v0.csv, survey_cards_key_v0.csv, validation_summary_v0.json
-실행: ~/.venvs/maximus/bin/python -I scripts/validate_store_serendipity_v0.py
+실행: ~/.venvs/maximus/bin/python -I scripts/store_level/validate_store_serendipity_v0.py
 """
 
 from __future__ import annotations

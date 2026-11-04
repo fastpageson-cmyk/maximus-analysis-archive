@@ -1,9 +1,9 @@
 # 점포(가게) 단위 의외성 추천: 선택지와 추천안
 
-작성: 2026-11-02 · 브랜치 `codex/gunwoo/store-level-recommendation-options`(`codex/gunwoo/serendipity-ranking`에서 분기)
+작성: 2026-11-02 · 브랜치 `gunwoo/store-level`(`gunwoo/serendipity` 초기 커밋 b433682에서 분기)
 범위: 조사와 설계만 했다. 코드는 바꾸지 않았다. 숫자는 저장소 안 가공 파일로 바로 셀 수 있는 것만 넣었다(0.3절).
 
-> **왜 필요한가.** SERP-v0(`docs/serendipity_recommendation_design.md`)는 공식 상권 786곳 단위로 추천한다. 그런데 상권 폴리곤이 넓다. 골목상권 중앙값은 7.9만㎡(대각선 605m), 발달상권은 14.8만㎡(879m), 관광특구는 62.6만㎡(1.7km, 최대 4.1km)다. 그래서 "이태원 관광특구가 의외의 장소"라는 말만으로는 실제로 어느 가게로 가야 할지 알 수 없다.
+> **왜 필요한가.** SERP-v0(`docs/serendipity/recommendation_design.md`)는 공식 상권 786곳 단위로 추천한다. 그런데 상권 폴리곤이 넓다. 골목상권 중앙값은 7.9만㎡(대각선 605m), 발달상권은 14.8만㎡(879m), 관광특구는 62.6만㎡(1.7km, 최대 4.1km)다. 그래서 "이태원 관광특구가 의외의 장소"라는 말만으로는 실제로 어느 가게로 가야 할지 알 수 없다.
 
 ---
 
@@ -193,7 +193,7 @@
 ---
 
 ## 참고
-- 저장소: `docs/serendipity_recommendation_design.md`, `docs/campus/README.md`, `docs/campus/limitations.md`, `docs/campus/globalcampus_raw_sources.md`, `data/processed/campus_*/README.md`
+- 저장소: `docs/serendipity/recommendation_design.md`, `docs/campus/README.md`, `docs/campus/limitations.md`, `docs/campus/globalcampus_raw_sources.md`, `data/processed/campus_*/README.md`
 - 상가(상권)정보: [data.go.kr 15083033](https://www.data.go.kr/catalog/15083033/fileData.json), [제공 항목 정리(wikidocs)](https://wikidocs.net/446638)
 - 지방행정 인허가 공공데이터포털 통합(2026-01): [경향신문](https://www.khan.co.kr/article/202601251400011/), [전국 업소 빅데이터 개방(2018)](https://m.go.seoul.co.kr/news/2018/09/06/20180906012012)
 - 서울시 상권분석서비스(점포-상권): [열린데이터광장 상권분석서비스 데이터(검색 결과, 번호별 대응은 확인 필요)](https://data.seoul.go.kr/dataList/OA-22183/S/1/datasetView.do), [상권분석서비스](https://golmok.seoul.go.kr/main.do)

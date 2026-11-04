@@ -4,7 +4,7 @@
     2 빠진 가게 목록(v1 규칙 사전 판정 store_rules_v1_preimpact_top30.csv가 있으면 사유를 붙인다)
     3 설문 카드 덱: 방법별 카드 수, 공공 태그 없는 카드 비율(survey_cards_key_{v}.csv의 has_tag)
 출력: data/processed/store_level/store_serendipity_v0_v1_compare.md
-실행: python -I scripts/compare_store_serendipity_v0_v1.py
+실행: python -I scripts/store_level/compare_store_serendipity_v0_v1.py
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
-PUBLIC = Path(__file__).resolve().parents[1] / "data/processed/store_level"
+PUBLIC = Path(__file__).resolve().parents[2] / "data/processed/store_level"
 PURPOSES = ["식사", "카페", "공부", "쇼핑", "여가문화"]
 KEY = ["purpose", "상호", "area_name"]
 

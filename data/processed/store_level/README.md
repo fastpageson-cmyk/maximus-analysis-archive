@@ -1,6 +1,6 @@
 # 점포 단위(store-level) 산출물
 
-설계: `docs/store_level_recommendation_options.md`. 원천 출처: `docs/campus/seoul_store_raw_sources.md`.
+설계: `docs/store_level/recommendation_options.md`. 원천 출처: `docs/campus/seoul_store_raw_sources.md`.
 점포 테이블 자체는 원천(상가정보·인허가)을 그대로 담고 있어 **커밋하지 않는다.** 이 폴더에는 공개해도 되는 감사 표본과 설명만 둔다.
 
 ## 서울 점포 테이블 v0 (로컬)
@@ -41,7 +41,7 @@
 
 ## 점포 후보와 접근성 판정 v0 (로컬)
 
-`<작업 폴더>/데이터/가공/서울캠/store_candidates_v0.csv`. 실행: `~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v0.py` (점포 테이블 v0 먼저).
+`<작업 폴더>/데이터/가공/서울캠/store_candidates_v0.csv`. 실행: `~/.venvs/maximus/bin/python -I scripts/store_level/build_store_candidates_v0.py` (점포 테이블 v0 먼저).
 
 | 열 | 설명 |
 |---|---|
@@ -83,7 +83,7 @@
 
 ## 점포 의외성 점수 v0
 
-실행: `~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v0.py` (후보 v0 먼저).
+실행: `~/.venvs/maximus/bin/python -I scripts/store_level/build_store_serendipity_v0.py` (후보 v0 먼저).
 
 - 로컬: `데이터/가공/서울캠/store_serendipity_v0.csv`(후보 전체, 점수 열 포함)
 - 공개: `store_serendipity_top30_v0.csv`(purpose, rank, 상호, 소분류명, area_name, 테마태그, 공공태그, reach_flag, review_evidence, reason), `store_serendipity_sensitivity_v0.csv`(기본판 대비 목적별 상위 30 자카드)
@@ -97,17 +97,17 @@
 
 ## v1 (규칙 보정판)
 
-변경 내용·근거·사전 영향: `docs/store_level_v1_changes.md`. 로컬 실행 프롬프트: `docs/store_level_v1_local_run.md`.
+변경 내용·근거·사전 영향: `docs/store_level/v1_changes.md`. 로컬 실행 프롬프트: `docs/prompts/store_level_v1_local_run.md`.
 규칙은 모두 `scripts/campus/서울캠/store_rules_v1.py` 상수다(업종 보정 `NAME_RULES`·`SERVICE_GROUP`, 공부 `NO_PURPOSE_SERVICES_V1`·`STUDY_INCLUDE_BOOKS`, 제외 `EXCLUDE_SUBTYPE_PATTERNS`·`EXCLUDE_NAME_KEYWORDS`·`BOUNDARY_SUBTYPES`, 생활형 `ERRAND_SUBTYPE_PATTERNS`).
 
 실행 순서(저장소 루트, 로컬):
 
 ```bash
 ~/.venvs/maximus/bin/python -I scripts/campus/서울캠/build_seoul_store_table_v1.py
-~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v1.py
-~/.venvs/maximus/bin/python -I scripts/build_store_serendipity_v1.py
-~/.venvs/maximus/bin/python -I scripts/validate_store_serendipity_v1.py
-~/.venvs/maximus/bin/python -I scripts/compare_store_serendipity_v0_v1.py
+~/.venvs/maximus/bin/python -I scripts/store_level/build_store_candidates_v1.py
+~/.venvs/maximus/bin/python -I scripts/store_level/build_store_serendipity_v1.py
+~/.venvs/maximus/bin/python -I scripts/store_level/validate_store_serendipity_v1.py
+~/.venvs/maximus/bin/python -I scripts/store_level/compare_store_serendipity_v0_v1.py
 ```
 
 ### 점포 테이블 v1에서 바뀌거나 늘어난 열 (`seoul_store_table_v1.csv`, 로컬·커밋 금지)
@@ -133,7 +133,7 @@
 - `store_serendipity_top30_v1.csv`: v0 열 + `category_source`
 - `store_serendipity_sensitivity_v1.csv`, `survey_cards_v1.csv`, `survey_cards_key_v1.csv`, `validation_summary_v1.json`: v0와 같은 형식
 - `store_serendipity_v0_v1_compare.md`: 목적별 추천 수, 빠진·새 가게, 카드 덱의 공공 태그 없는 비율 비교
-- `store_rules_v1_preimpact_top30.csv`, `store_rules_v1_preimpact_cards.csv`: **v1 결과가 아니다.** 공개 v0 목록에 v1 규칙을 덧씌운 가게별 판정(사전 추정, `scripts/estimate_store_rules_v1_impact.py`)
+- `store_rules_v1_preimpact_top30.csv`, `store_rules_v1_preimpact_cards.csv`: **v1 결과가 아니다.** 공개 v0 목록에 v1 규칙을 덧씌운 가게별 판정(사전 추정, `scripts/store_level/estimate_store_rules_v1_impact.py`)
 
 ### v1 한계
 - 키워드·제외 목록은 사람이 정했다. `category_fixed=True`와 `exclude_reason` 표본을 로컬에서 검수해야 한다.

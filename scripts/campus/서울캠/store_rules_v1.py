@@ -1,6 +1,6 @@
 """점포 단계 규칙 v1: 업종 보정 · 점포 단계 목적 · 비목적지 제외 · 희소도 가점 대상.
 
-v0(`build_seoul_store_table_v0.py`)에서 고치는 세 가지를 한곳에 모은다. 설명과 근거는 `docs/store_level_v1_changes.md`.
+v0(`build_seoul_store_table_v0.py`)에서 고치는 세 가지를 한곳에 모은다. 설명과 근거는 `docs/store_level/v1_changes.md`.
 
     1 업종 보정   category: 상호 키워드(name_rule) > 인허가 위생업태(license, 상가정보와 크게 어긋날 때만) > 상가정보 소분류(sbiz)
     2 공부 축소   점포 단계 공부 = 독서실/스터디 카페 (+ 서점·북카페, STUDY_INCLUDE_BOOKS). 학원·문구·스포츠강습은 목적 없음

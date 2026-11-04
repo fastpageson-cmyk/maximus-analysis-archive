@@ -12,7 +12,7 @@
              wait_risk는 seoulcampus_areas_reach_v1.csv 값
     관성   = inertia_baselines_top10.csv 상권마다 식사·카페 점포 최대 50곳 무작위(seed 42, 상권마다 한 번 뽑아 목적끼리 같이 씀)
 출력: 데이터/가공/서울캠/store_candidates_v0.csv (커밋 금지)
-실행: ~/.venvs/maximus/bin/python -I scripts/build_store_candidates_v0.py
+실행: ~/.venvs/maximus/bin/python -I scripts/store_level/build_store_candidates_v0.py
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 ROOT = Path(os.environ["MAXIMUS_WORKSPACE"]) if "MAXIMUS_WORKSPACE" in os.environ else next((p for p in REPO.parents if (p / "데이터").is_dir()), REPO.parent)
 DATA = REPO / "data/processed"
 OUT = ROOT / "데이터/가공/서울캠"
