@@ -1,6 +1,6 @@
 # 의외성(세렌디피티) 추천 설계 — SERP-v0
 
-작성: 김건우 / 2026-11-02 / 브랜치 `codex/gunwoo/serendipity-ranking`
+작성: 김건우 / 2026-11-02 / 브랜치 `gunwoo/serendipity`
 
 - 코드: `scripts/build_serendipity_ranking.py`
 - 테스트: `tests/test_build_serendipity_ranking.py`
@@ -61,7 +61,7 @@ R은 Huff식 효용을 따른다. 매력도는 높을수록, 이동 저항은 �
 
 ## 2. (a) 선행연구를 로직의 어디에 넣었나
 
-> **주의(2026-11-02).** 2·3장의 연구 요지는 원문을 읽지 않고 쓴 것이다. 별도 세션의 검증 노트(브랜치 `codex/gunwoo/serendipity-research-notes`, `docs/serendipity_prior_research_notes.md`)에서 여러 서술이 틀리거나 부분적으로 틀린 것으로 나왔다. 예: arXiv 2507.03503은 잔차 보정이 아니라 인기 구간 분포 맞춤 재정렬(CP)이다. Kotkov는 곱 형태를 직접 제시하지 않는다. MDM 2016·Chowdhury·Kemperman의 서지도 다르다. 이 노트도 네트워크 제한으로 초록 수준 확인이라 전문 정독 뒤 2·3장을 다시 쓴다.
+> **주의(2026-11-02).** 2·3장의 연구 요지는 원문을 읽지 않고 쓴 것이다. 별도 세션의 검증 노트(브랜치 `gunwoo/serendipity`, `docs/serendipity/prior_research_notes.md`)에서 여러 서술이 틀리거나 부분적으로 틀린 것으로 나왔다. 예: arXiv 2507.03503은 잔차 보정이 아니라 인기 구간 분포 맞춤 재정렬(CP)이다. Kotkov는 곱 형태를 직접 제시하지 않는다. MDM 2016·Chowdhury·Kemperman의 서지도 다르다. 이 노트도 네트워크 제한으로 초록 수준 확인이라 전문 정독 뒤 2·3장을 다시 쓴다.
 
 | 연구 | 들어간 자리 | 구현 |
 |---|---|---|
@@ -349,7 +349,7 @@ python3 scripts/build_serendipity_ranking.py --origin hufs_seoul
 
 읽을 때 주의:
 - **'안 가 본 곳'은 집단 기준이다.** 거리순 관성은 상위 10곳만 막는다. 그래서 회기역(회기역 1번과 다른 폴리곤)처럼 외대생이 실제로 자주 가는 곳이 '안 가 본 곳'으로 나올 수 있다. 서울캠발 OD나 설문이 있어야 실제로 걸러진다.
-- 공식 상권 폴리곤이 넓다(골목상권 중앙값 7.8만㎡). '태릉시장 특화거리'는 방향만 알려 주고 어느 가게인지는 알려 주지 않는다. 점포 단위 검토는 브랜치 `codex/gunwoo/store-level-recommendation-options`에 있다.
+- 공식 상권 폴리곤이 넓다(골목상권 중앙값 7.8만㎡). '태릉시장 특화거리'는 방향만 알려 주고 어느 가게인지는 알려 주지 않는다. 점포 단위 검토는 브랜치 `gunwoo/store-level`에 있다.
 - 구간별 근거 중 `u_resid`(구조 대비 저유입)는 행정동 배분 유입 기반이라 거칠다.
 - 22~30분 구간은 모두 측정값이지만 셋 중 둘 이상이 25분을 넘어 배차 대기를 넣으면 30분을 넘을 수 있다(`wait_risk`).
 

@@ -1,6 +1,6 @@
 # 의외성 추천 모델 해설: Kotkov의 정의에서 SERP-v1까지
 
-작성: 김건우 · 2026-11-04 · 브랜치 `codex/gunwoo/serendipity-papers-explainer`
+작성: 김건우 · 2026-11-04 · 브랜치 `gunwoo/serendipity`
 
 수치 출처: `data/processed/serendipity_ranking/explainer_numbers_v1.md`(2025년 4분기, 동대문구 출발, 로컬 재실행 결과). 코드: `scripts/build_serendipity_ranking.py`.
 
@@ -85,7 +85,7 @@ R 하한이 결과를 거의 바꾸지 않는 것도 같은 이유입니다. 하
 
 ## 5. 후속 아이디어
 
-지금 모델은 그대로 두고 검토할 후보만 따로 모아 두었습니다(`docs/serendipity_followup_ideas.md`). 앱 첫 화면에서 카드 몇 장으로 그 사람이 아는 곳을 받아 개인 기준 모형을 만드는 방법, 날씨·시간대에 따라 관성과 추천을 바꾸는 방법, "덜 알려졌는데 갈 만한 칸"에서 일정 몫을 반드시 고르게 하는 방법, 관광특구처럼 넓은 상권을 점포 군집으로 다시 쪼개는 방법이 들어 있습니다.
+지금 모델은 그대로 두고 검토할 후보만 따로 모아 두었습니다(`docs/serendipity/followup_ideas.md`). 앱 첫 화면에서 카드 몇 장으로 그 사람이 아는 곳을 받아 개인 기준 모형을 만드는 방법, 날씨·시간대에 따라 관성과 추천을 바꾸는 방법, "덜 알려졌는데 갈 만한 칸"에서 일정 몫을 반드시 고르게 하는 방법, 관광특구처럼 넓은 상권을 점포 군집으로 다시 쪼개는 방법이 들어 있습니다.
 
 정리하면 지금의 SERP-v1은 세렌디피티 추천이라고 부르기에는 이르고, '관성 밖 추천'이라고 부르는 것이 정확합니다. 늘 가던 곳을 빼고, 갈 만한 곳 중에서, 관성과 다른 곳을 고르는 데까지는 Kotkov의 정의와 Ge의 기준 모형을 그대로 따랐습니다. 그 결과가 사람들에게 정말 새롭고 의외인지는 모형이 아니라 설문이 정합니다.
 
@@ -103,4 +103,4 @@ R 하한이 결과를 거의 바꾸지 않는 것도 같은 이유입니다. 하
 
 - 코드: `scripts/build_serendipity_ranking.py`, 테스트 `tests/test_build_serendipity_ranking.py`(17개 통과)
 - 결과: `data/processed/serendipity_ranking/`, 서울캠 `data/processed/serendipity_ranking/hufs_seoul/`
-- 설계 문서: `docs/serendipity_recommendation_design.md`. 이 문서 2장의 선행연구 인용 일부가 틀렸다는 점은 원문 확인 노트(브랜치 `codex/gunwoo/serendipity-research-notes`, `docs/serendipity_prior_research_notes.md`)에 정리돼 있습니다.
+- 설계 문서: `docs/serendipity/recommendation_design.md`. 이 문서 2장의 선행연구 인용 일부가 틀렸다는 점은 원문 확인 노트(브랜치 `gunwoo/serendipity`, `docs/serendipity/prior_research_notes.md`)에 정리돼 있습니다.

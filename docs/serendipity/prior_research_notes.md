@@ -1,7 +1,7 @@
 # 세렌디피티 선행연구 원문 확인 노트 (1차: 서지 특정 + 초록·2차 출처 수준)
 
-작성: 2026-11-02 / 브랜치 `codex/gunwoo/serendipity-research-notes`
-대상 문서: `docs/serendipity_recommendation_design.md` 2·3장, `scripts/build_serendipity_ranking.py`
+작성: 2026-11-02 / 브랜치 `gunwoo/serendipity`
+대상 문서: `docs/serendipity/recommendation_design.md` 2·3장, `scripts/build_serendipity_ranking.py`
 
 > **이 노트의 확인 범위를 먼저 밝힌다.** 이번 세션의 클라우드 환경은 네트워크 허용 목록이 좁아서 논문 원문 호스트에 접속하지 못했다. 직접 시도했다가 막힌 호스트는 `arxiv.org`, `pmc.ncbi.nlm.nih.gov`, `jyx.jyu.fi`(Kotkov 학위논문·저자 공개본), `jcst.ict.ac.cn`(JCST 전문 PDF), `ebooks.iospress.nl`(DISCOVERY), `will-qianzhao.github.io`(Kotkov 2018 저자 공개본)이다. 그래서 **13편 모두 전문을 읽지 못했다.** 웹 검색 결과에 나온 초록, 출판사 서지, 저자 저장소 README, 인용 논문의 요약만 확인했다. 각 연구의 `확인 범위` 칸에 이 수준을 적었다.
 >

@@ -1,6 +1,6 @@
 ## 0. 실행 기록
 
-실행 기준: `codex/gunwoo/serendipity-papers-explainer` @ c9cbd06, `~/.venvs/maximus/bin/python`. 이 브랜치는 `fork` 원격(fastpageson-cmyk)에만 있어 fetch·pull·push 모두 `fork`로 했다(`origin`은 editpanda-dev).
+실행 기준: `gunwoo/serendipity`(옛 이름 `codex/gunwoo/serendipity-papers-explainer`) @ c9cbd06, `~/.venvs/maximus/bin/python`. 이 브랜치는 `fork` 원격(fastpageson-cmyk)에만 있어 fetch·pull·push 모두 `fork`로 했다(`origin`은 editpanda-dev).
 
 | 명령 | 결과 | 끝 줄 출력 |
 |:---|:---|:---|

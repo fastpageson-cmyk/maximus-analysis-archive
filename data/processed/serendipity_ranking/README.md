@@ -1,6 +1,6 @@
 # 의외성 재순위화 SERP-v0 결과
 
-생성: `python3 scripts/build_serendipity_ranking.py` / 설계·해석: `docs/serendipity_recommendation_design.md`
+생성: `python3 scripts/build_serendipity_ranking.py` / 설계·해석: `docs/serendipity/recommendation_design.md`
 
 저장소 안 공개 가공 데이터만 쓴다(API 호출 없음, B078/B079 원본 없음).
 
